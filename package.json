@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 3000",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "format": "prettier --write",
@@ -20,6 +20,7 @@
     "@mantine/dates": "^7.3.2",
     "@mantine/hooks": "^7.3.2",
     "@mantine/notifications": "^7.3.2",
+    "@tabler/icons-react": "^2.44.0",
     "autoprefixer": "^10.4.16",
     "axios": "^1.6.2",
     "husky": "^8.0.3",

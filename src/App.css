@@ -10,10 +10,6 @@ body::-webkit-scrollbar {
   display: inline-block;
 }
 
-body,
-#root {
-  background: #e7e6b6;
-}
 
 /* For Webkit-based browsers (Chrome, Safari and Opera) */
 .scrollbar-hide::-webkit-scrollbar {
