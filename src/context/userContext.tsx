@@ -19,7 +19,7 @@ export const AuthContextProviderUser = ({ props }: { props: ReactNode }) => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
-
+  const [fetched, setFetched] = useState<boolean>(false);
   const getLoggedIn = async () => {
     try {
       setLoading(true);
@@ -38,11 +38,13 @@ export const AuthContextProviderUser = ({ props }: { props: ReactNode }) => {
         setLoggedIn(false);
         setUser(undefined);
       }
+      setFetched(true);
     } catch (e) {
       setLoggedIn(false);
       setLoading(false);
       setUser(undefined);
       setError(true);
+      setFetched(true);
     }
   };
 
@@ -63,6 +65,7 @@ export const AuthContextProviderUser = ({ props }: { props: ReactNode }) => {
       isLoggedIn: loggedIn,
       isLoading: loading,
       error: error,
+      isFetched: fetched,
     }),
     [user, loggedIn, loading, error]
   );

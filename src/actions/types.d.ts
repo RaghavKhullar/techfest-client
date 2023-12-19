@@ -8,4 +8,5 @@ interface AuthContextTypeUser {
   isLoggedIn: boolean;
   isLoading: boolean;
   error: boolean;
+  isFetched: boolean;
 }

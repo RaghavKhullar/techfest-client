@@ -14,12 +14,12 @@ const AuthContextAdmin = createContext<AuthContextTypeUser>(
   {} as AuthContextTypeUser
 );
 
-export const AuthContextProviderAdmin = ({ props }: { props: ReactNode }) => {
+export const AuthContextProviderAdmin = ({ children }: { children: any }) => {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
-
+  const [fetched, setFetched] = useState<boolean>(false);
   const getLoggedIn = async () => {
     try {
       setLoading(true);
@@ -33,16 +33,18 @@ export const AuthContextProviderAdmin = ({ props }: { props: ReactNode }) => {
       setError(false);
       if (loggedInResponse.status === 200) {
         setLoggedIn(true);
-        setUser(loggedInResponse.data);
+        setUser(loggedInResponse.data.data);
       } else {
         setLoggedIn(false);
         setUser(undefined);
       }
+      setFetched(true);
     } catch (e) {
       setLoggedIn(false);
       setLoading(false);
       setUser(undefined);
       setError(true);
+      setFetched(true);
     }
   };
 
@@ -51,6 +53,7 @@ export const AuthContextProviderAdmin = ({ props }: { props: ReactNode }) => {
   // If we change page, reset the error state.
   useEffect(() => {
     if (error) setError(false);
+    setFetched(false);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -63,12 +66,13 @@ export const AuthContextProviderAdmin = ({ props }: { props: ReactNode }) => {
       isLoggedIn: loggedIn,
       isLoading: loading,
       error: error,
+      isFetched: fetched,
     }),
     [user, loggedIn, loading, error]
   );
   return (
     <AuthContextAdmin.Provider value={cachedValue}>
-      {!loading && props}
+      {!loading && children}
     </AuthContextAdmin.Provider>
   );
 };
