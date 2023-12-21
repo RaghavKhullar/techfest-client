@@ -18,11 +18,13 @@
   "dependencies": {
     "@mantine/core": "^7.3.2",
     "@mantine/dates": "^7.3.2",
+    "@mantine/form": "^7.3.2",
     "@mantine/hooks": "^7.3.2",
     "@mantine/notifications": "^7.3.2",
     "@tabler/icons-react": "^2.44.0",
     "autoprefixer": "^10.4.16",
     "axios": "^1.6.2",
+    "dayjs": "^1.11.10",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
     "postcss-preset-mantine": "^1.11.1",

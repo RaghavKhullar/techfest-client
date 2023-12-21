@@ -1,15 +1,15 @@
 interface ChildTasks {
-  name: String;
-  id: String;
+  name: string;
+  id: string;
 }
 
 interface AllProjectResponse {
-  name: String;
+  name: string;
   deadline: Date | null;
-  id: String;
+  id: string;
   isCompleted: boolean;
   childTasks: ChildTasks[];
-  description: String;
+  description: string;
 }
 
 interface TasksOfProjectResponse {
@@ -25,12 +25,12 @@ interface UserSubTask {
 }
 
 interface SubTaskResponse {
-  name: String;
+  name: string;
   deadline: Date | null;
-  id: String;
+  id: string;
   isCompleted: boolean;
-  allotedUsers: UserSubTask[];
-  description: String;
+  allotedUsers: UserSubTask;
+  description: string;
 }
 
 interface SubTasksOfProjectResponse {

@@ -39,3 +39,74 @@ export const fetchSubTasksForTask = async (
     return e.response;
   }
 };
+
+export const addProject = async (body: any) => {
+  try {
+    const response = await CustomAxios.post("/admin/addProject", body, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const addTask = async (body: any) => {
+  try {
+    const response = await CustomAxios.post("/admin/addTask", body, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const addSubTask = async (body: any) => {
+  try {
+    const response = await CustomAxios.post("/admin/addSubtask", body, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const removeProject = async (id: string) => {
+  try {
+    const response = await CustomAxios.post(
+      "/admin/deleteProject",
+      { projectId: id },
+      { withCredentials: true }
+    );
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const removeTask = async (body: {
+  projectId: string;
+  taskId: string;
+}) => {
+  try {
+    const response = await CustomAxios.post("/admin/deleteTask", body, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const removeSubtask = async (body: any) => {
+  try {
+    const response = await CustomAxios.post("/admin/deleteSubtask", body, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};

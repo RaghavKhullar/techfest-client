@@ -5,6 +5,6 @@ export const NavLinks = [
   },
   {
     name: "Add Project",
-    link: "/admin/addProject",
+    link: "/admin/home",
   },
 ];

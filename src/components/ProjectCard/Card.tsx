@@ -1,9 +1,42 @@
 import { Avatar, Button, Card, Flex, Group, Modal, Text } from "@mantine/core";
 import { useMediaQuery, useDisclosure } from "@mantine/hooks";
-
-const ProjectCard = ({ project }: { project: AllProjectResponse }) => {
+import { showNotification } from "../../helpers/helpers";
+import { removeProject } from "../../helpers/apiCalls";
+import { useNavigate } from "react-router-dom";
+const ProjectCard = ({
+  project,
+  fetchProjects,
+}: {
+  project: AllProjectResponse;
+  fetchProjects: () => Promise<void>;
+}) => {
   const isMobile = useMediaQuery("max-width:600px");
   const [isModalOpen, { open, close }] = useDisclosure(false);
+  const [isDeleteModelOpen, { open: delOpen, close: delClose }] =
+    useDisclosure(false);
+  const navigate = useNavigate();
+  const deleteProject = async () => {
+    try {
+      const response = await removeProject(project.id);
+      if (response.status === 200) {
+        showNotification("Success", response.data.message, "success");
+        close();
+        delClose();
+        fetchProjects();
+        return;
+      } else {
+        showNotification("Error", response.data.message, "error");
+        close();
+        delClose();
+        return;
+      }
+    } catch {
+      close();
+      delClose();
+      navigate("/admin/home");
+      return;
+    }
+  };
   return (
     <>
       <Card
@@ -25,17 +58,19 @@ const ProjectCard = ({ project }: { project: AllProjectResponse }) => {
       </Card>
       <Modal
         opened={isModalOpen}
-        onClose={close}
-        title="Project Name"
+        onClose={() => {
+          close();
+          if (isDeleteModelOpen) {
+            delClose();
+          }
+        }}
+        title={project.name}
         centered
         overlayProps={{
           backgroundOpacity: 0.55,
           blur: 3,
         }}
       >
-        <Group>
-          <Text>{project.name}</Text>
-        </Group>
         <Group>
           <Text>Description</Text>
         </Group>
@@ -56,9 +91,32 @@ const ProjectCard = ({ project }: { project: AllProjectResponse }) => {
             })}
           </Flex>
         </Group>
-        <Button component="a" href={"/admin/project/" + project.id}>
-          Inspect
-        </Button>
+        <Flex justify="space-between">
+          <Button onClick={delOpen}>Delete project</Button>
+          <Button component="a" href={"/admin/project/" + project.id}>
+            Inspect
+          </Button>
+        </Flex>
+      </Modal>
+      <Modal
+        opened={isDeleteModelOpen}
+        onClose={() => {}}
+        centered
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}
+        withCloseButton={false}
+      >
+        <Text className="text-3xl">Warning! {project.name}</Text>
+        <Text className="text-lg">
+          Are you sure you want to delete this project? It will remove all the
+          tasks and sub-tasks
+        </Text>
+        <Flex className="mt-[20px] justify-evenly">
+          <Button onClick={deleteProject}> Yes</Button>
+          <Button onClick={delClose}> No</Button>
+        </Flex>
       </Modal>
     </>
   );

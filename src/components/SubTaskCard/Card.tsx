@@ -1,5 +1,8 @@
 import { Avatar, Button, Card, Flex, Group, Modal, Text } from "@mantine/core";
 import { useMediaQuery, useDisclosure } from "@mantine/hooks";
+import { removeSubtask } from "../../helpers/apiCalls";
+import { showNotification } from "../../helpers/helpers";
+import { useNavigate } from "react-router-dom";
 
 const SubTaskCard = ({
   subTask,
@@ -7,16 +10,45 @@ const SubTaskCard = ({
   taskName,
   projectId,
   projectName,
+  fetchSubTasksOfProject,
 }: {
   subTask: SubTaskResponse;
   taskId: string;
   taskName: string;
   projectId: string;
   projectName: string;
+  fetchSubTasksOfProject: (projectId: string, taskId: string) => Promise<void>;
 }) => {
   const isMobile = useMediaQuery("max-width:600px");
   const [isModalOpen, { open, close }] = useDisclosure(false);
-  const alottedUsers = [...new Array(4).fill({ image: "", name: "Hey" })];
+  const [isDeleteModelOpen, { open: delOpen, close: delClose }] =
+    useDisclosure(false);
+  const navigate = useNavigate();
+  const deleteSubtask = async () => {
+    try {
+      const response = await removeSubtask({
+        taskId: taskId,
+        subTaskId: subTask.id,
+      });
+      if (response.status === 200) {
+        showNotification("Success", response.data.message, "success");
+        close();
+        delClose();
+        fetchSubTasksOfProject(projectId, taskId);
+        return;
+      } else {
+        showNotification("Error", response.data.message, "error");
+        close();
+        delClose();
+        return;
+      }
+    } catch {
+      close();
+      delClose();
+      navigate("/admin/home");
+      return;
+    }
+  };
   return (
     <>
       <Card
@@ -25,6 +57,7 @@ const SubTaskCard = ({
         className={`${!isMobile ? "w-[25%]" : "w-full"} m-[2rem]`}
       >
         <Flex justify="space-between">
+          {/* No user */}
           <Avatar />
           <Button onClick={open}> View</Button>
         </Flex>
@@ -42,8 +75,13 @@ const SubTaskCard = ({
       </Card>
       <Modal
         opened={isModalOpen}
-        onClose={close}
-        title="Subtask Name"
+        onClose={() => {
+          close();
+          if (isDeleteModelOpen) {
+            delClose();
+          }
+        }}
+        title={subTask.name}
         centered
         overlayProps={{
           backgroundOpacity: 0.55,
@@ -52,20 +90,39 @@ const SubTaskCard = ({
       >
         <Group>
           <Text>Alloted to:</Text>
-          {subTask.allotedUsers.map((user, i) => {
-            return (
-              <>
-                <Flex justify="space-between" align="center" key={i}>
-                  <Avatar src={user.image} />
-                  <Text> {user.name}</Text>
-                </Flex>
-              </>
-            );
-          })}
+          {subTask.allotedUsers && (
+            <>
+              <Flex justify="space-between" align="center">
+                <Avatar src={subTask.allotedUsers.image} />
+                <Text> {subTask.allotedUsers.name}</Text>
+              </Flex>
+            </>
+          )}
         </Group>
         <Group>
           <Text>Description</Text>
         </Group>
+        <Button onClick={delOpen}>Delete subtask</Button>
+      </Modal>
+      <Modal
+        opened={isDeleteModelOpen}
+        onClose={() => {}}
+        centered
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}
+        withCloseButton={false}
+      >
+        <Text className="text-3xl">Warning! {subTask.name}</Text>
+        <Text className="text-lg">
+          Are you sure you want to delete this task? It will remove all the
+          sub-task details
+        </Text>
+        <Flex className="mt-[20px] justify-evenly">
+          <Button onClick={deleteSubtask}> Yes</Button>
+          <Button onClick={delClose}> No</Button>
+        </Flex>
       </Modal>
     </>
   );
