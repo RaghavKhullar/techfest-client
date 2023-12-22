@@ -33,6 +33,7 @@ interface SubTaskResponse {
   allotedUsers: UserSubTask;
   description: string;
   priority: number;
+  document: string;
 }
 
 interface SubTasksOfProjectResponse {

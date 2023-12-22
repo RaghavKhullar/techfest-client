@@ -1,5 +1,6 @@
 import { Avatar, Box, Flex, Text, Skeleton } from "@mantine/core";
 import { NavLinks } from "./NavLinks";
+import { Link } from "react-router-dom";
 const SideNav = ({ user }: { user: User }) => {
   return (
     <>
@@ -17,7 +18,7 @@ const SideNav = ({ user }: { user: User }) => {
       >
         <Text className="text-3xl mb-4">Functions</Text>
         {NavLinks.map((link, index) => (
-          <Text key={index} h={28} mt="sm" component="a" href={link.link}>
+          <Text key={index} h={28} mt="sm" component={Link} to={link.link}>
             {link.name}
           </Text>
         ))}

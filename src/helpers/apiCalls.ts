@@ -66,6 +66,9 @@ export const addSubTask = async (body: any) => {
   try {
     const response = await CustomAxios.post("/admin/addSubtask", body, {
       withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
     return response;
   } catch (e: any) {

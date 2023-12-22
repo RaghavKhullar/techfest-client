@@ -1,9 +1,21 @@
-import { Avatar, Button, Card, Flex, Group, Modal, Text } from "@mantine/core";
+import {
+  Avatar,
+  Button,
+  Card,
+  Center,
+  FileInput,
+  Flex,
+  Group,
+  Modal,
+  Text,
+} from "@mantine/core";
 import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { removeSubtask } from "../../helpers/apiCalls";
 import { showNotification } from "../../helpers/helpers";
 import { useNavigate } from "react-router-dom";
 import { getPriority } from "../../utils/utils";
+import { IconFileTypePdf } from "@tabler/icons-react";
+import { BACKEND_URL } from "../../../config";
 
 const SubTaskCard = ({
   subTask,
@@ -118,8 +130,26 @@ const SubTaskCard = ({
             <Text>{getPriority(subTask.priority)}</Text>
           </Flex>
         </Flex>
-        <Button onClick={delOpen}>Delete subtask</Button>
+        <Center className="mt-[10px]">
+          {subTask.document && subTask.document.length > 0 && (
+            <>
+              <Button
+                leftSection={<IconFileTypePdf />}
+                component="a"
+                href={`${BACKEND_URL}/documents/files/${subTask.document}`}
+                target="_blank"
+              >
+                {" "}
+                View attachment
+              </Button>
+            </>
+          )}
+        </Center>
+        <Flex className="mt-[10px]">
+          <Button onClick={delOpen}>Delete subtask</Button>
+        </Flex>
       </Modal>
+
       <Modal
         opened={isDeleteModelOpen}
         onClose={() => {}}
