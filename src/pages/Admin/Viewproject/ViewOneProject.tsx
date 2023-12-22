@@ -22,10 +22,13 @@ import {
   IconArrowBigDownLinesFilled,
   IconArrowBigUpLinesFilled,
   IconBrandMedium,
+  IconCalendar,
+  IconCalendarClock,
   IconCalendarDue,
   IconClearAll,
   IconDiscountCheckFilled,
   IconProgress,
+  IconShieldHalfFilled,
 } from "@tabler/icons-react";
 
 const Home = () => {
@@ -36,6 +39,7 @@ const Home = () => {
     projectName: "",
     tasks: [],
   });
+  const [sortFilter, setSortFilter] = useState<string>("default");
   const [filter, setFilter] = useState<string>("all");
   const [isModalOpen, { open, close }] = useDisclosure(false);
   const [currTasks, setcurrTasks] = useState<AllProjectResponse[]>([]);
@@ -115,13 +119,32 @@ const Home = () => {
     }
     fetchTasksOfProject(projectId);
   }, [projectId]);
+
   useEffect(() => {
-    if (filter == "all") {
-      setcurrTasks(taskResponse.tasks);
+    let arr = [];
+    if (filter != "all") {
+      arr = taskResponse.tasks.filter((subTask) => subTask.status == filter);
     } else {
-      setcurrTasks(taskResponse.tasks.filter((task) => task.status == filter));
+      arr = taskResponse.tasks.filter(() => true);
     }
-  }, [taskResponse.tasks, filter]);
+
+    if (sortFilter == "priority") {
+      arr.sort((a, b) => {
+        return b.priority - a.priority;
+      });
+    } else if (sortFilter == "deadline") {
+      arr.sort((a, b) => {
+        return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+      });
+    } else if (sortFilter == "start date") {
+      arr.sort((a, b) => {
+        return (
+          new Date(a.creationTime).getTime() -
+          new Date(b.creationTime).getTime()
+        );
+      });
+    }
+  }, [taskResponse.tasks, filter, sortFilter]);
   return (
     <>
       {taskResponse && taskResponse.projectId.length > 0 && (
@@ -203,51 +226,101 @@ const Home = () => {
               </Box>
             </Box>
           </Modal>
-          <Flex className="justify-end">
-            <SegmentedControl
-              value={filter}
-              onChange={setFilter}
-              data={[
-                {
-                  value: "all",
-                  label: (
-                    <Center style={{ gap: 10 }}>
-                      <IconClearAll />
-                      <span>All</span>
-                    </Center>
-                  ),
-                },
-                {
-                  value: "due",
-                  label: (
-                    <Center style={{ gap: 10 }}>
-                      <IconCalendarDue />
-                      <span>Due</span>
-                    </Center>
-                  ),
-                },
-                {
-                  value: "progress",
-                  label: (
-                    <Center style={{ gap: 10 }}>
-                      <IconProgress />
-                      <span>In Progress</span>
-                    </Center>
-                  ),
-                },
-                {
-                  value: "complete",
-                  label: (
-                    <Center style={{ gap: 10 }}>
-                      <IconDiscountCheckFilled />
-                      <span>Complete</span>
-                    </Center>
-                  ),
-                },
-              ]}
-              transitionDuration={200}
-              transitionTimingFunction="linear"
-            />
+          <Flex className="justify-around items-center">
+            <Flex className="items-center">
+              <Text className="text-lg">Filter Tasks:</Text>
+              <SegmentedControl
+                value={filter}
+                onChange={setFilter}
+                data={[
+                  {
+                    value: "all",
+                    label: (
+                      <Center style={{ gap: 10 }}>
+                        <IconClearAll />
+                        <span>All</span>
+                      </Center>
+                    ),
+                  },
+                  {
+                    value: "todo",
+                    label: (
+                      <Center style={{ gap: 10 }}>
+                        <IconCalendarDue />
+                        <span>To-Do</span>
+                      </Center>
+                    ),
+                  },
+                  {
+                    value: "progress",
+                    label: (
+                      <Center style={{ gap: 10 }}>
+                        <IconProgress />
+                        <span>In Progress</span>
+                      </Center>
+                    ),
+                  },
+                  {
+                    value: "complete",
+                    label: (
+                      <Center style={{ gap: 10 }}>
+                        <IconDiscountCheckFilled />
+                        <span>Complete</span>
+                      </Center>
+                    ),
+                  },
+                ]}
+                transitionDuration={200}
+                transitionTimingFunction="linear"
+              />
+            </Flex>
+            <Flex className="items-center">
+              <Text className="text-lg">Sort By:</Text>
+              <SegmentedControl
+                value={sortFilter}
+                onChange={setSortFilter}
+                data={[
+                  {
+                    value: "default",
+                    label: (
+                      <Center style={{ gap: 10 }}>
+                        <IconClearAll />
+                        <span>Default</span>
+                      </Center>
+                    ),
+                  },
+                  {
+                    value: "priority",
+                    label: (
+                      <Center style={{ gap: 10 }}>
+                        <IconShieldHalfFilled />
+                        <span>Priority</span>
+                      </Center>
+                    ),
+                  },
+                  {
+                    value: "deadline",
+                    label: (
+                      <Center style={{ gap: 10 }}>
+                        <IconCalendarClock />
+                        <span>Due date</span>
+                      </Center>
+                    ),
+                  },
+                  {
+                    value: "start date",
+                    label: (
+                      <Center style={{ gap: 10 }}>
+                        <IconCalendar />
+                        <span>Start date</span>
+                      </Center>
+                    ),
+                  },
+                ]}
+                transitionDuration={200}
+                transitionTimingFunction="linear"
+              />
+            </Flex>
           </Flex>
           <Center className="mb-[20px]">
             <Text className="text-3xl">{taskResponse.projectName}</Text>
