@@ -2,7 +2,7 @@ import { Avatar, Button, Card, Flex, Group, Modal, Text } from "@mantine/core";
 import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { showNotification } from "../../helpers/helpers";
 import { removeTask } from "../../helpers/apiCalls";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getPriority } from "../../utils/utils";
 
 const TaskCard = ({
@@ -115,8 +115,8 @@ const TaskCard = ({
         <Flex justify="space-between">
           <Button onClick={delOpen}>Delete task</Button>
           <Button
-            component="a"
-            href={"/admin/task/" + projectId + "/" + task.id}
+            component={Link}
+            to={"/admin/task/" + projectId + "/" + task.id}
           >
             Inspect
           </Button>

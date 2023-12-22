@@ -2,7 +2,7 @@ import { Avatar, Button, Card, Flex, Group, Modal, Text } from "@mantine/core";
 import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { showNotification } from "../../helpers/helpers";
 import { removeProject } from "../../helpers/apiCalls";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getPriority } from "../../utils/utils";
 const ProjectCard = ({
   project,
@@ -109,7 +109,7 @@ const ProjectCard = ({
         </Group>
         <Flex justify="space-between">
           <Button onClick={delOpen}>Delete project</Button>
-          <Button component="a" href={"/admin/project/" + project.id}>
+          <Button component={Link} to={"/admin/project/" + project.id}>
             Inspect
           </Button>
         </Flex>

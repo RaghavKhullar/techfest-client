@@ -8,9 +8,10 @@ import {
   TextInput,
   Text,
   SegmentedControl,
+  FileInput,
 } from "@mantine/core";
 import { SubTaskCard } from "../../../components";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { showNotification } from "../../../helpers/helpers";
 import { addSubTask, fetchSubTasksForTask } from "../../../helpers/apiCalls";
@@ -24,6 +25,7 @@ import {
   IconCalendarDue,
   IconClearAll,
   IconDiscountCheckFilled,
+  IconFileTypePdf,
   IconProgress,
 } from "@tabler/icons-react";
 import { priorityMap } from "../../../utils/utils";
@@ -48,12 +50,14 @@ const Home = () => {
     description: string;
     deadline: Date;
     priority: string;
+    document: File | undefined;
   }>({
     initialValues: {
       name: "",
       description: "",
       deadline: new Date(),
       priority: priorityMap.LOW.toString(),
+      document: undefined,
     },
 
     validate: {
@@ -79,6 +83,7 @@ const Home = () => {
         projectId: projectId,
         taskId: taskId,
         priority: parseInt(addSubTaskForm.values.priority),
+        file: addSubTaskForm.values.document,
       });
       if (response.status === 200) {
         showNotification("Success", response.data.message, "success");
@@ -171,6 +176,32 @@ const Home = () => {
                   label="Deadline"
                   {...addSubTaskForm.getInputProps("deadline")}
                 />
+                <Flex className="mt-[10px] justify-between">
+                  <FileInput
+                    className={
+                      addSubTaskForm.values.document != undefined
+                        ? "w-[70%]"
+                        : "w-[100%]"
+                    }
+                    label="Upload the pdf file"
+                    leftSection={<IconFileTypePdf />}
+                    accept="application/pdf"
+                    {...addSubTaskForm.getInputProps("document")}
+                    clearable
+                  />
+                  {addSubTaskForm.values.document != undefined ? (
+                    <Button
+                      className="self-end"
+                      href={URL.createObjectURL(addSubTaskForm.values.document)}
+                      target="_blank"
+                      component="a"
+                    >
+                      Preview
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
+                </Flex>
                 <Flex className="w-full flex-col mt-[10px]">
                   <Text className="text-sm">Priority</Text>
                   <SegmentedControl
