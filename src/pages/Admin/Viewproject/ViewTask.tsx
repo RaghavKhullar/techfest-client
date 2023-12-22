@@ -7,6 +7,7 @@ import {
   Modal,
   TextInput,
   Text,
+  SegmentedControl,
 } from "@mantine/core";
 import { SubTaskCard } from "../../../components";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,10 +17,21 @@ import { addSubTask, fetchSubTasksForTask } from "../../../helpers/apiCalls";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { DatePickerInput } from "@mantine/dates";
+import {
+  IconArrowBigDownLinesFilled,
+  IconArrowBigUpLinesFilled,
+  IconBrandMedium,
+  IconCalendarDue,
+  IconClearAll,
+  IconDiscountCheckFilled,
+  IconProgress,
+} from "@tabler/icons-react";
+import { priorityMap } from "../../../utils/utils";
 
 const Home = () => {
   const { projectId, taskId } = useParams();
   const navigate = useNavigate();
+  const [filter, setFilter] = useState<string>("all");
   const [subtaskResponse, setSubtaskResponse] =
     useState<SubTasksOfProjectResponse>({
       projectName: "",
@@ -28,17 +40,20 @@ const Home = () => {
       taskName: "",
       subTasks: [],
     });
+  const [currSubTasks, setCurrSubTasks] = useState<SubTaskResponse[]>([]);
   const [isModalOpen, { open, close }] = useDisclosure(false);
 
   const addSubTaskForm = useForm<{
     name: string;
     description: string;
     deadline: Date;
+    priority: string;
   }>({
     initialValues: {
       name: "",
       description: "",
       deadline: new Date(),
+      priority: priorityMap.LOW.toString(),
     },
 
     validate: {
@@ -63,6 +78,7 @@ const Home = () => {
         deadline: addSubTaskForm.values.deadline,
         projectId: projectId,
         taskId: taskId,
+        priority: parseInt(addSubTaskForm.values.priority),
       });
       if (response.status === 200) {
         showNotification("Success", response.data.message, "success");
@@ -109,7 +125,16 @@ const Home = () => {
     }
     fetchSubTasksOfProject(projectId, taskId);
   }, [projectId, taskId]);
-  const arr = [...new Array(10).fill(0)];
+
+  useEffect(() => {
+    if (filter == "all") {
+      setCurrSubTasks(subtaskResponse.subTasks);
+    } else {
+      setCurrSubTasks(
+        subtaskResponse.subTasks.filter((subTask) => subTask.status == filter)
+      );
+    }
+  }, [subtaskResponse.subTasks, filter]);
   return (
     <>
       {subtaskResponse && subtaskResponse.projectId.length > 0 && (
@@ -136,15 +161,53 @@ const Home = () => {
                   withAsterisk
                   label="Add description of the sub task"
                   placeholder="yours@gmail.com"
+                  className="mt-[10px]"
                   {...addSubTaskForm.getInputProps("description")}
                 />
 
                 <DatePickerInput
                   valueFormat="DD-MM-YYYY"
-                  className="w-full"
+                  className="w-full mt-[10px]"
                   label="Deadline"
                   {...addSubTaskForm.getInputProps("deadline")}
                 />
+                <Flex className="w-full flex-col mt-[10px]">
+                  <Text className="text-sm">Priority</Text>
+                  <SegmentedControl
+                    data={[
+                      {
+                        value: "0",
+                        label: (
+                          <Center style={{ gap: 10 }}>
+                            <IconArrowBigDownLinesFilled />
+                            <span>Low</span>
+                          </Center>
+                        ),
+                      },
+                      {
+                        value: "1",
+                        label: (
+                          <Center style={{ gap: 10 }}>
+                            <IconBrandMedium />
+                            <span>Medium</span>
+                          </Center>
+                        ),
+                      },
+                      {
+                        value: "2",
+                        label: (
+                          <Center style={{ gap: 10 }}>
+                            <IconArrowBigUpLinesFilled />
+                            <span>High</span>
+                          </Center>
+                        ),
+                      },
+                    ]}
+                    transitionDuration={200}
+                    transitionTimingFunction="linear"
+                    {...addSubTaskForm.getInputProps("priority")}
+                  />
+                </Flex>
                 <Group justify="center" mt="md">
                   <Button type="submit" onClick={submitSubTaskForm}>
                     Add subtask
@@ -153,6 +216,52 @@ const Home = () => {
               </Box>
             </Box>
           </Modal>
+          <Flex className="justify-end">
+            <SegmentedControl
+              value={filter}
+              onChange={setFilter}
+              data={[
+                {
+                  value: "all",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconClearAll />
+                      <span>All</span>
+                    </Center>
+                  ),
+                },
+                {
+                  value: "due",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconCalendarDue />
+                      <span>Due</span>
+                    </Center>
+                  ),
+                },
+                {
+                  value: "progress",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconProgress />
+                      <span>In Progress</span>
+                    </Center>
+                  ),
+                },
+                {
+                  value: "complete",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconDiscountCheckFilled />
+                      <span>Complete</span>
+                    </Center>
+                  ),
+                },
+              ]}
+              transitionDuration={200}
+              transitionTimingFunction="linear"
+            />
+          </Flex>
           <Center className="mb-[20px]">
             <Text className="text-3xl">
               Project: {subtaskResponse.projectName}
@@ -168,19 +277,20 @@ const Home = () => {
       )}
 
       <Flex wrap="wrap" justify="space-around">
-        {subtaskResponse.subTasks.map((val, i) => {
-          return (
-            <SubTaskCard
-              subTask={val}
-              projectId={subtaskResponse.projectId}
-              projectName={subtaskResponse.projectName}
-              taskName={subtaskResponse.taskName}
-              taskId={subtaskResponse.taskId}
-              key={i}
-              fetchSubTasksOfProject={fetchSubTasksOfProject}
-            />
-          );
-        })}
+        {subtaskResponse.subTasks.length > 0 &&
+          currSubTasks.map((val, i) => {
+            return (
+              <SubTaskCard
+                subTask={val}
+                projectId={subtaskResponse.projectId}
+                projectName={subtaskResponse.projectName}
+                taskName={subtaskResponse.taskName}
+                taskId={subtaskResponse.taskId}
+                key={i}
+                fetchSubTasksOfProject={fetchSubTasksOfProject}
+              />
+            );
+          })}
       </Flex>
     </>
   );

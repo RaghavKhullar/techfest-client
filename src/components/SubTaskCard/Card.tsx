@@ -3,6 +3,7 @@ import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { removeSubtask } from "../../helpers/apiCalls";
 import { showNotification } from "../../helpers/helpers";
 import { useNavigate } from "react-router-dom";
+import { getPriority } from "../../utils/utils";
 
 const SubTaskCard = ({
   subTask,
@@ -65,12 +66,16 @@ const SubTaskCard = ({
         <Text>{subTask.name}</Text>
 
         <Flex>
-          <Text>Description:</Text>
+          <Text>Description: </Text>
           <Text>
             {subTask.description.length > 0
               ? subTask.description
               : "No description"}
           </Text>
+        </Flex>
+        <Flex>
+          <Text>Priority: </Text>
+          <Text>{getPriority(subTask.priority)}</Text>
         </Flex>
       </Card>
       <Modal
@@ -89,7 +94,7 @@ const SubTaskCard = ({
         }}
       >
         <Group>
-          <Text>Alloted to:</Text>
+          <Text>Alloted to: </Text>
           {subTask.allotedUsers && (
             <>
               <Flex justify="space-between" align="center">
@@ -99,9 +104,20 @@ const SubTaskCard = ({
             </>
           )}
         </Group>
-        <Group>
-          <Text>Description</Text>
-        </Group>
+        <Flex className="flex-col">
+          <Flex>
+            <Text>Description: </Text>
+            <Text>
+              {subTask.description.length > 0
+                ? subTask.description
+                : "No description"}
+            </Text>
+          </Flex>
+          <Flex>
+            <Text>Priority: </Text>
+            <Text>{getPriority(subTask.priority)}</Text>
+          </Flex>
+        </Flex>
         <Button onClick={delOpen}>Delete subtask</Button>
       </Modal>
       <Modal

@@ -3,6 +3,7 @@ import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { showNotification } from "../../helpers/helpers";
 import { removeTask } from "../../helpers/apiCalls";
 import { useNavigate } from "react-router-dom";
+import { getPriority } from "../../utils/utils";
 
 const TaskCard = ({
   task,
@@ -60,6 +61,10 @@ const TaskCard = ({
             {task.description.length > 0 ? task.description : "No description"}
           </Text>
         </Flex>
+        <Flex>
+          <Text>Priority: </Text>
+          <Text>{getPriority(task.priority)}</Text>
+        </Flex>
         <Button onClick={open}> View</Button>
       </Card>
       <Modal
@@ -77,9 +82,20 @@ const TaskCard = ({
           blur: 3,
         }}
       >
-        <Group>
-          <Text>Description</Text>
-        </Group>
+        <Flex className="flex-col">
+          <Flex>
+            <Text>Description: </Text>
+            <Text>
+              {task.description.length > 0
+                ? task.description
+                : "No description"}
+            </Text>
+          </Flex>
+          <Flex>
+            <Text>Priority: </Text>
+            <Text>{getPriority(task.priority)}</Text>
+          </Flex>
+        </Flex>
         <Group>
           <Flex direction="column">
             <Text>Subtasks</Text>

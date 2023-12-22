@@ -7,9 +7,10 @@ interface AllProjectResponse {
   name: string;
   deadline: Date | null;
   id: string;
-  isCompleted: boolean;
+  status: string;
   childTasks: ChildTasks[];
   description: string;
+  priority: number;
 }
 
 interface TasksOfProjectResponse {
@@ -28,9 +29,10 @@ interface SubTaskResponse {
   name: string;
   deadline: Date | null;
   id: string;
-  isCompleted: boolean;
+  status: string;
   allotedUsers: UserSubTask;
   description: string;
+  priority: number;
 }
 
 interface SubTasksOfProjectResponse {

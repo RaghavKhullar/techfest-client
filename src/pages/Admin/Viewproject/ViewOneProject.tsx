@@ -7,6 +7,7 @@ import {
   Modal,
   TextInput,
   Text,
+  SegmentedControl,
 } from "@mantine/core";
 import { TaskCard } from "../../../components";
 import { useParams, useNavigate } from "react-router-dom";
@@ -16,6 +17,16 @@ import { addTask, fetchTasksForProject } from "../../../helpers/apiCalls";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { DatePickerInput } from "@mantine/dates";
+import { priorityMap } from "../../../utils/utils";
+import {
+  IconArrowBigDownLinesFilled,
+  IconArrowBigUpLinesFilled,
+  IconBrandMedium,
+  IconCalendarDue,
+  IconClearAll,
+  IconDiscountCheckFilled,
+  IconProgress,
+} from "@tabler/icons-react";
 
 const Home = () => {
   const { projectId } = useParams();
@@ -25,17 +36,21 @@ const Home = () => {
     projectName: "",
     tasks: [],
   });
+  const [filter, setFilter] = useState<string>("all");
   const [isModalOpen, { open, close }] = useDisclosure(false);
+  const [currTasks, setcurrTasks] = useState<AllProjectResponse[]>([]);
 
   const addTaskForm = useForm<{
     name: string;
     description: string;
     deadline: Date;
+    priority: string;
   }>({
     initialValues: {
       name: "",
       description: "",
       deadline: new Date(),
+      priority: priorityMap.LOW.toString(),
     },
 
     validate: {
@@ -59,6 +74,7 @@ const Home = () => {
         description: addTaskForm.values.description,
         deadline: addTaskForm.values.deadline,
         projectId: projectId,
+        priority: parseInt(addTaskForm.values.priority),
       });
       if (response.status === 200) {
         showNotification("Success", response.data.message, "success");
@@ -99,8 +115,13 @@ const Home = () => {
     }
     fetchTasksOfProject(projectId);
   }, [projectId]);
-
-  const arr = [...new Array(10).fill(0)];
+  useEffect(() => {
+    if (filter == "all") {
+      setcurrTasks(taskResponse.tasks);
+    } else {
+      setcurrTasks(taskResponse.tasks.filter((task) => task.status == filter));
+    }
+  }, [taskResponse.tasks, filter]);
   return (
     <>
       {taskResponse && taskResponse.projectId.length > 0 && (
@@ -127,15 +148,53 @@ const Home = () => {
                   withAsterisk
                   label="Add description of the task"
                   placeholder="yours@gmail.com"
+                  className="mt-[10px]"
                   {...addTaskForm.getInputProps("description")}
                 />
 
                 <DatePickerInput
                   valueFormat="DD-MM-YYYY"
-                  className="w-full"
+                  className="w-full mt-[10px]"
                   label="Deadline"
                   {...addTaskForm.getInputProps("deadline")}
                 />
+                <Flex className="w-full flex-col mt-[10px]">
+                  <Text className="text-sm">Priority</Text>
+                  <SegmentedControl
+                    data={[
+                      {
+                        value: "0",
+                        label: (
+                          <Center style={{ gap: 10 }}>
+                            <IconArrowBigDownLinesFilled />
+                            <span>Low</span>
+                          </Center>
+                        ),
+                      },
+                      {
+                        value: "1",
+                        label: (
+                          <Center style={{ gap: 10 }}>
+                            <IconBrandMedium />
+                            <span>Medium</span>
+                          </Center>
+                        ),
+                      },
+                      {
+                        value: "2",
+                        label: (
+                          <Center style={{ gap: 10 }}>
+                            <IconArrowBigUpLinesFilled />
+                            <span>High</span>
+                          </Center>
+                        ),
+                      },
+                    ]}
+                    transitionDuration={200}
+                    transitionTimingFunction="linear"
+                    {...addTaskForm.getInputProps("priority")}
+                  />
+                </Flex>
                 <Group justify="center" mt="md">
                   <Button type="submit" onClick={submitTaskForm}>
                     Add task
@@ -144,6 +203,52 @@ const Home = () => {
               </Box>
             </Box>
           </Modal>
+          <Flex className="justify-end">
+            <SegmentedControl
+              value={filter}
+              onChange={setFilter}
+              data={[
+                {
+                  value: "all",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconClearAll />
+                      <span>All</span>
+                    </Center>
+                  ),
+                },
+                {
+                  value: "due",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconCalendarDue />
+                      <span>Due</span>
+                    </Center>
+                  ),
+                },
+                {
+                  value: "progress",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconProgress />
+                      <span>In Progress</span>
+                    </Center>
+                  ),
+                },
+                {
+                  value: "complete",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconDiscountCheckFilled />
+                      <span>Complete</span>
+                    </Center>
+                  ),
+                },
+              ]}
+              transitionDuration={200}
+              transitionTimingFunction="linear"
+            />
+          </Flex>
           <Center className="mb-[20px]">
             <Text className="text-3xl">{taskResponse.projectName}</Text>
           </Center>
@@ -154,7 +259,7 @@ const Home = () => {
       )}
       <Flex wrap="wrap" justify="space-around">
         {taskResponse.tasks.length > 0 &&
-          taskResponse.tasks.map((task, i) => {
+          currTasks.map((task, i) => {
             return (
               <TaskCard
                 key={i}
