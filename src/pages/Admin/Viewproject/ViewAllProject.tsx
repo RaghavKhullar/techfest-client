@@ -21,16 +21,21 @@ import {
   IconArrowBigDownLinesFilled,
   IconArrowBigUpLinesFilled,
   IconBrandMedium,
+  IconCalendar,
+  IconCalendarClock,
   IconCalendarDue,
   IconClearAll,
   IconDiscountCheckFilled,
   IconProgress,
+  IconShieldHalfFilled,
 } from "@tabler/icons-react";
 import { priorityMap } from "../../../utils/utils";
 
 const Home = () => {
   const [projects, setProjects] = useState<AllProjectResponse[]>([]);
   const [isModalOpen, { open, close }] = useDisclosure(false);
+  const [sortFilter, setSortFilter] = useState<string>("default");
+
   const navigate = useNavigate();
   const addProjectForm = useForm<{
     name: string;
@@ -103,12 +108,30 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (filter == "all") {
-      setcurrProjects(projects);
+    let arr = [];
+    if (filter != "all") {
+      arr = projects.filter((subTask) => subTask.status == filter);
     } else {
-      setcurrProjects(projects.filter((project) => project.status == filter));
+      arr = projects.filter(() => true);
     }
-  }, [projects, filter]);
+
+    if (sortFilter == "priority") {
+      arr.sort((a, b) => {
+        return b.priority - a.priority;
+      });
+    } else if (sortFilter == "deadline") {
+      arr.sort((a, b) => {
+        return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+      });
+    } else if (sortFilter == "start date") {
+      arr.sort((a, b) => {
+        return (
+          new Date(a.creationTime).getTime() -
+          new Date(b.creationTime).getTime()
+        );
+      });
+    }
+  }, [projects, filter, sortFilter]);
   return (
     <>
       <Modal
@@ -188,51 +211,101 @@ const Home = () => {
           </Box>
         </Box>
       </Modal>
-      <Flex className="justify-end">
-        <SegmentedControl
-          value={filter}
-          onChange={setFilter}
-          data={[
-            {
-              value: "all",
-              label: (
-                <Center style={{ gap: 10 }}>
-                  <IconClearAll />
-                  <span>All</span>
-                </Center>
-              ),
-            },
-            {
-              value: "due",
-              label: (
-                <Center style={{ gap: 10 }}>
-                  <IconCalendarDue />
-                  <span>Due</span>
-                </Center>
-              ),
-            },
-            {
-              value: "progress",
-              label: (
-                <Center style={{ gap: 10 }}>
-                  <IconProgress />
-                  <span>In Progress</span>
-                </Center>
-              ),
-            },
-            {
-              value: "complete",
-              label: (
-                <Center style={{ gap: 10 }}>
-                  <IconDiscountCheckFilled />
-                  <span>Complete</span>
-                </Center>
-              ),
-            },
-          ]}
-          transitionDuration={200}
-          transitionTimingFunction="linear"
-        />
+      <Flex className="justify-around items-center">
+        <Flex className="items-center">
+          <Text className="text-lg">Filter Tasks:</Text>
+          <SegmentedControl
+            value={filter}
+            onChange={setFilter}
+            data={[
+              {
+                value: "all",
+                label: (
+                  <Center style={{ gap: 10 }}>
+                    <IconClearAll />
+                    <span>All</span>
+                  </Center>
+                ),
+              },
+              {
+                value: "todo",
+                label: (
+                  <Center style={{ gap: 10 }}>
+                    <IconCalendarDue />
+                    <span>To-Do</span>
+                  </Center>
+                ),
+              },
+              {
+                value: "progress",
+                label: (
+                  <Center style={{ gap: 10 }}>
+                    <IconProgress />
+                    <span>In Progress</span>
+                  </Center>
+                ),
+              },
+              {
+                value: "complete",
+                label: (
+                  <Center style={{ gap: 10 }}>
+                    <IconDiscountCheckFilled />
+                    <span>Complete</span>
+                  </Center>
+                ),
+              },
+            ]}
+            transitionDuration={200}
+            transitionTimingFunction="linear"
+          />
+        </Flex>
+        <Flex className="items-center">
+          <Text className="text-lg">Sort By:</Text>
+          <SegmentedControl
+            value={sortFilter}
+            onChange={setSortFilter}
+            data={[
+              {
+                value: "default",
+                label: (
+                  <Center style={{ gap: 10 }}>
+                    <IconClearAll />
+                    <span>Default</span>
+                  </Center>
+                ),
+              },
+              {
+                value: "priority",
+                label: (
+                  <Center style={{ gap: 10 }}>
+                    <IconShieldHalfFilled />
+                    <span>Priority</span>
+                  </Center>
+                ),
+              },
+              {
+                value: "deadline",
+                label: (
+                  <Center style={{ gap: 10 }}>
+                    <IconCalendarClock />
+                    <span>Due date</span>
+                  </Center>
+                ),
+              },
+              {
+                value: "start date",
+                label: (
+                  <Center style={{ gap: 10 }}>
+                    <IconCalendar />
+                    <span>Start date</span>
+                  </Center>
+                ),
+              },
+            ]}
+            transitionDuration={200}
+            transitionTimingFunction="linear"
+          />
+        </Flex>
       </Flex>
       <Center className="mb-[20px]">
         <Text className="text-3xl">All projects</Text>

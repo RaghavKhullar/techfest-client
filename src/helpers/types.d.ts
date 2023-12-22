@@ -5,12 +5,13 @@ interface ChildTasks {
 
 interface AllProjectResponse {
   name: string;
-  deadline: Date | null;
+  deadline: Date;
   id: string;
   status: string;
   childTasks: ChildTasks[];
   description: string;
   priority: number;
+  creationTime: Date;
 }
 
 interface TasksOfProjectResponse {
@@ -27,13 +28,14 @@ interface UserSubTask {
 
 interface SubTaskResponse {
   name: string;
-  deadline: Date | null;
+  deadline: Date;
   id: string;
   status: string;
   allotedUsers: UserSubTask;
   description: string;
   priority: number;
   document: string;
+  creationTime: Date;
 }
 
 interface SubTasksOfProjectResponse {
