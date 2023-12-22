@@ -7,6 +7,7 @@ import {
   Modal,
   TextInput,
   Text,
+  SegmentedControl,
 } from "@mantine/core";
 import { ProjectCard } from "../../../components";
 import { useEffect, useState } from "react";
@@ -16,6 +17,16 @@ import { useNavigate } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { DatePickerInput } from "@mantine/dates";
+import {
+  IconArrowBigDownLinesFilled,
+  IconArrowBigUpLinesFilled,
+  IconBrandMedium,
+  IconCalendarDue,
+  IconClearAll,
+  IconDiscountCheckFilled,
+  IconProgress,
+} from "@tabler/icons-react";
+import { priorityMap } from "../../../utils/utils";
 
 const Home = () => {
   const [projects, setProjects] = useState<AllProjectResponse[]>([]);
@@ -25,11 +36,13 @@ const Home = () => {
     name: string;
     description: string;
     deadline: Date;
+    priority: string;
   }>({
     initialValues: {
       name: "",
       description: "",
       deadline: new Date(),
+      priority: priorityMap.LOW.toString(),
     },
 
     validate: {
@@ -37,7 +50,8 @@ const Home = () => {
       description: (value) => (value.length > 0 ? null : "Invalid description"),
     },
   });
-
+  const [filter, setFilter] = useState<string>("all");
+  const [currProjects, setcurrProjects] = useState<AllProjectResponse[]>([]);
   const submitProjectForm = async () => {
     if (
       addProjectForm.values.description.length == 0 ||
@@ -51,6 +65,7 @@ const Home = () => {
         name: addProjectForm.values.name,
         description: addProjectForm.values.description,
         deadline: addProjectForm.values.deadline,
+        priority: parseInt(addProjectForm.values.priority),
       });
       if (response.status === 200) {
         showNotification("Success", response.data.message, "success");
@@ -86,6 +101,14 @@ const Home = () => {
   useEffect(() => {
     fetchProjects();
   }, []);
+
+  useEffect(() => {
+    if (filter == "all") {
+      setcurrProjects(projects);
+    } else {
+      setcurrProjects(projects.filter((project) => project.status == filter));
+    }
+  }, [projects, filter]);
   return (
     <>
       <Modal
@@ -110,15 +133,53 @@ const Home = () => {
               withAsterisk
               label="Add description of the Project"
               placeholder="yours@gmail.com"
+              className="mt-[10px]"
               {...addProjectForm.getInputProps("description")}
             />
 
             <DatePickerInput
               valueFormat="DD-MM-YYYY"
-              className="w-full"
+              className="w-full mt-[10px]"
               label="Deadline"
               {...addProjectForm.getInputProps("deadline")}
             />
+            <Flex className="w-full flex-col mt-[10px]">
+              <Text className="text-sm">Priority</Text>
+              <SegmentedControl
+                data={[
+                  {
+                    value: "0",
+                    label: (
+                      <Center style={{ gap: 10 }}>
+                        <IconArrowBigDownLinesFilled />
+                        <span>Low</span>
+                      </Center>
+                    ),
+                  },
+                  {
+                    value: "1",
+                    label: (
+                      <Center style={{ gap: 10 }}>
+                        <IconBrandMedium />
+                        <span>Medium</span>
+                      </Center>
+                    ),
+                  },
+                  {
+                    value: "2",
+                    label: (
+                      <Center style={{ gap: 10 }}>
+                        <IconArrowBigUpLinesFilled />
+                        <span>High</span>
+                      </Center>
+                    ),
+                  },
+                ]}
+                transitionDuration={200}
+                transitionTimingFunction="linear"
+                {...addProjectForm.getInputProps("priority")}
+              />
+            </Flex>
             <Group justify="center" mt="md">
               <Button type="submit" onClick={submitProjectForm}>
                 Add Project
@@ -127,6 +188,52 @@ const Home = () => {
           </Box>
         </Box>
       </Modal>
+      <Flex className="justify-end">
+        <SegmentedControl
+          value={filter}
+          onChange={setFilter}
+          data={[
+            {
+              value: "all",
+              label: (
+                <Center style={{ gap: 10 }}>
+                  <IconClearAll />
+                  <span>All</span>
+                </Center>
+              ),
+            },
+            {
+              value: "due",
+              label: (
+                <Center style={{ gap: 10 }}>
+                  <IconCalendarDue />
+                  <span>Due</span>
+                </Center>
+              ),
+            },
+            {
+              value: "progress",
+              label: (
+                <Center style={{ gap: 10 }}>
+                  <IconProgress />
+                  <span>In Progress</span>
+                </Center>
+              ),
+            },
+            {
+              value: "complete",
+              label: (
+                <Center style={{ gap: 10 }}>
+                  <IconDiscountCheckFilled />
+                  <span>Complete</span>
+                </Center>
+              ),
+            },
+          ]}
+          transitionDuration={200}
+          transitionTimingFunction="linear"
+        />
+      </Flex>
       <Center className="mb-[20px]">
         <Text className="text-3xl">All projects</Text>
       </Center>
@@ -134,15 +241,16 @@ const Home = () => {
         <Button onClick={open}> Add a new project</Button>
       </Center>
       <Flex wrap="wrap" justify="space-around">
-        {projects.map((project: AllProjectResponse, i) => {
-          return (
-            <ProjectCard
-              key={i}
-              project={project}
-              fetchProjects={fetchProjects}
-            />
-          );
-        })}
+        {projects.length &&
+          currProjects.map((project: AllProjectResponse, i) => {
+            return (
+              <ProjectCard
+                key={i}
+                project={project}
+                fetchProjects={fetchProjects}
+              />
+            );
+          })}
       </Flex>
     </>
   );
