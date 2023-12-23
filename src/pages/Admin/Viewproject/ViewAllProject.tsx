@@ -131,6 +131,7 @@ const Home = () => {
         );
       });
     }
+    setcurrProjects(arr);
   }, [projects, filter, sortFilter]);
   return (
     <>

@@ -1,9 +1,220 @@
-import { Avatar, Button, Card, Flex, Group, Modal, Text } from "@mantine/core";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  Center,
+  Flex,
+  Group,
+  Modal,
+  SegmentedControl,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { showNotification } from "../../helpers/helpers";
-import { removeProject } from "../../helpers/apiCalls";
+import { editProject, removeProject } from "../../helpers/apiCalls";
 import { Link, useNavigate } from "react-router-dom";
 import { getPriority } from "../../utils/utils";
+import { DatePickerInput } from "@mantine/dates";
+import {
+  IconArrowBigDownLinesFilled,
+  IconArrowBigUpLinesFilled,
+  IconBrandMedium,
+  IconCalendarDue,
+  IconClearAll,
+  IconDiscountCheckFilled,
+  IconProgress,
+} from "@tabler/icons-react";
+import { useForm } from "@mantine/form";
+
+const EditProjectModal = ({
+  project,
+  isEditModalOpen,
+  editClose,
+  fetchProjects,
+}: {
+  project: AllProjectResponse;
+  isEditModalOpen: boolean;
+  editClose: () => void;
+  fetchProjects: () => Promise<void>;
+}) => {
+  const navigate = useNavigate();
+
+  const submitProjectForm = async () => {
+    if (
+      addProjectForm.values.description.length == 0 ||
+      addProjectForm.values.name.length == 0
+    ) {
+      showNotification("Error", "Invalid parameters", "error");
+      return;
+    }
+    try {
+      const response = await editProject({
+        name: addProjectForm.values.name,
+        description: addProjectForm.values.description,
+        deadline: addProjectForm.values.deadline,
+        priority: parseInt(addProjectForm.values.priority),
+        projectId: project.id,
+        status: addProjectForm.values.status,
+      });
+      if (response.status === 200) {
+        showNotification("Success", response.data.message, "success");
+        fetchProjects();
+        editClose();
+        return;
+      } else {
+        showNotification("Error", response.data.message, "error");
+        return;
+      }
+    } catch {
+      showNotification("Error", "Internal server error", "error");
+      navigate("/login");
+      return;
+    }
+  };
+  const addProjectForm = useForm<{
+    name: string;
+    description: string;
+    deadline: Date;
+    priority: string;
+    status: string;
+  }>({
+    initialValues: {
+      name: project.name,
+      description: project.description,
+      deadline: new Date(project.deadline),
+      priority: project.priority.toString(),
+      status: project.status,
+    },
+
+    validate: {
+      name: (value) => (value.length > 0 ? null : "Invalid Project name"),
+      description: (value) => (value.length > 0 ? null : "Invalid description"),
+    },
+  });
+  return (
+    <Modal
+      opened={isEditModalOpen}
+      onClose={editClose}
+      title="Edit project"
+      centered
+      overlayProps={{
+        backgroundOpacity: 0.55,
+        blur: 3,
+      }}
+    >
+      <Box w={"80%"} mx="auto">
+        <Box mx="auto">
+          <TextInput
+            withAsterisk
+            label="Add name of the Project"
+            placeholder="John Doe"
+            {...addProjectForm.getInputProps("name")}
+          />
+          <TextInput
+            withAsterisk
+            label="Add description of the Project"
+            placeholder="yours@gmail.com"
+            className="mt-[10px]"
+            {...addProjectForm.getInputProps("description")}
+          />
+
+          <DatePickerInput
+            valueFormat="DD-MM-YYYY"
+            className="w-full mt-[10px]"
+            label="Deadline"
+            {...addProjectForm.getInputProps("deadline")}
+          />
+          <Flex className="w-full flex-col mt-[10px]">
+            <Text className="text-sm">Priority</Text>
+            <SegmentedControl
+              data={[
+                {
+                  value: "0",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconArrowBigDownLinesFilled />
+                      <span>Low</span>
+                    </Center>
+                  ),
+                },
+                {
+                  value: "1",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconBrandMedium />
+                      <span>Medium</span>
+                    </Center>
+                  ),
+                },
+                {
+                  value: "2",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconArrowBigUpLinesFilled />
+                      <span>High</span>
+                    </Center>
+                  ),
+                },
+              ]}
+              transitionDuration={200}
+              transitionTimingFunction="linear"
+              {...addProjectForm.getInputProps("priority")}
+            />
+          </Flex>
+
+          <Flex className="w-full flex-col mt-[10px]">
+            <Text className="text-sm">Status</Text>
+            <SegmentedControl
+              data={[
+                {
+                  value: "todo",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconCalendarDue />
+                      <span>To-Do</span>
+                    </Center>
+                  ),
+                },
+                {
+                  value: "progress",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconProgress />
+                      <span>In Progress</span>
+                    </Center>
+                  ),
+                },
+                {
+                  value: "complete",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconDiscountCheckFilled />
+                      <span>Complete</span>
+                    </Center>
+                  ),
+                },
+              ]}
+              transitionDuration={200}
+              transitionTimingFunction="linear"
+              {...addProjectForm.getInputProps("status")}
+            />
+          </Flex>
+
+          <Group justify="space-evenly" mt="md">
+            <Button type="submit" onClick={addProjectForm.reset}>
+              Reset form
+            </Button>
+            <Button type="submit" onClick={submitProjectForm}>
+              Edit Project
+            </Button>
+          </Group>
+        </Box>
+      </Box>
+    </Modal>
+  );
+};
 const ProjectCard = ({
   project,
   fetchProjects,
@@ -14,6 +225,8 @@ const ProjectCard = ({
   const isMobile = useMediaQuery("max-width:600px");
   const [isModalOpen, { open, close }] = useDisclosure(false);
   const [isDeleteModelOpen, { open: delOpen, close: delClose }] =
+    useDisclosure(false);
+  const [isEditModalOpen, { open: editOpen, close: editClose }] =
     useDisclosure(false);
   const navigate = useNavigate();
   const deleteProject = async () => {
@@ -68,6 +281,9 @@ const ProjectCard = ({
           if (isDeleteModelOpen) {
             delClose();
           }
+          if (isEditModalOpen) {
+            editClose();
+          }
         }}
         title={project.name}
         centered
@@ -109,6 +325,7 @@ const ProjectCard = ({
         </Group>
         <Flex justify="space-between">
           <Button onClick={delOpen}>Delete project</Button>
+          <Button onClick={editOpen}>Edit project</Button>
           <Button component={Link} to={"/admin/project/" + project.id}>
             Inspect
           </Button>
@@ -134,6 +351,12 @@ const ProjectCard = ({
           <Button onClick={delClose}> No</Button>
         </Flex>
       </Modal>
+      <EditProjectModal
+        project={project}
+        isEditModalOpen={isEditModalOpen}
+        editClose={editClose}
+        fetchProjects={fetchProjects}
+      />
     </>
   );
 };
