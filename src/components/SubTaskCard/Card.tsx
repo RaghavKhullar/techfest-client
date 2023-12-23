@@ -397,7 +397,7 @@ const SubTaskCard = ({
             <Text>{getPriority(subTask.priority)}</Text>
           </Flex>
         </Flex>
-        <Center className="mt-[10px]">
+        <Flex className="mt-[10px] justify-between">
           {subTask.document && subTask.document.length > 0 && (
             <>
               <Button
@@ -411,7 +411,20 @@ const SubTaskCard = ({
               </Button>
             </>
           )}
-        </Center>
+          {subTask.userDocument && subTask.userDocument.length > 0 && (
+            <>
+              <Button
+                leftSection={<IconFileTypePdf />}
+                component="a"
+                href={`${BACKEND_URL}/documents/files/${subTask.userDocument}`}
+                target="_blank"
+              >
+                {" "}
+                View user doc
+              </Button>
+            </>
+          )}
+        </Flex>
         <Flex className="mt-[10px] justify-between">
           <Button onClick={delOpen}>Delete subtask</Button>
           <Button onClick={editOpen}>Edit subtask</Button>
