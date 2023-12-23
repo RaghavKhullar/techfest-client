@@ -5,3 +5,5 @@ export { default as ViewAllProject } from "./Admin/Viewproject/ViewAllProject";
 export { default as AdminHome } from "./Admin/Home/Home";
 export { default as ViewOneProject } from "./Admin/Viewproject/ViewOneProject";
 export { default as ViewTask } from "./Admin/Viewproject/ViewTask";
+export { default as AddUser } from "./Admin/AddUser/AddUser";
+export { default as ViewUser } from "./Admin/ViewUsers/ViewUsers";

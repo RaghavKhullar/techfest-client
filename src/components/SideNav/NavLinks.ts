@@ -4,7 +4,11 @@ export const NavLinks = [
     link: "/admin/viewProject",
   },
   {
-    name: "Add Project",
-    link: "/admin/home",
+    name: "View Users",
+    link: "/admin/viewUsers",
+  },
+  {
+    name: "Add User",
+    link: "/admin/addUser",
   },
 ];

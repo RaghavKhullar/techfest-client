@@ -16,3 +16,7 @@ export const getPriority = (prio: number) => {
       return "Nil";
   }
 };
+
+export const gender = ["Male", "Female"];
+export const role = ["HR", "Backend", "Frontend"];
+export const position = ["Senior", "Junior", "Intern"];

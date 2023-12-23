@@ -1,4 +1,11 @@
-import { AdminHome, ViewAllProject, ViewOneProject, ViewTask } from "../pages";
+import {
+  AdminHome,
+  ViewAllProject,
+  ViewOneProject,
+  ViewTask,
+  AddUser,
+  ViewUser,
+} from "../pages";
 
 export const adminRoutes: RouteType[] = [
   {
@@ -22,6 +29,18 @@ export const adminRoutes: RouteType[] = [
   {
     path: "/admin/task/:projectId/:taskId",
     element: <ViewTask />,
+    title: "Admin Home",
+    description: "Home page of admin",
+  },
+  {
+    path: "/admin/addUser",
+    element: <AddUser />,
+    title: "Admin Home",
+    description: "Home page of admin",
+  },
+  {
+    path: "/admin/viewUsers",
+    element: <ViewUser />,
     title: "Admin Home",
     description: "Home page of admin",
   },

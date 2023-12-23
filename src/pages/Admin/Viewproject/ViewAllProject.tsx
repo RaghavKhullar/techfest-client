@@ -315,7 +315,7 @@ const Home = () => {
         <Button onClick={open}> Add a new project</Button>
       </Center>
       <Flex wrap="wrap" justify="space-around">
-        {projects.length &&
+        {projects.length > 0 &&
           currProjects.map((project: AllProjectResponse, i) => {
             return (
               <ProjectCard
