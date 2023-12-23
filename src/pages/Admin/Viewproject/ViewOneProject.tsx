@@ -144,6 +144,7 @@ const Home = () => {
         );
       });
     }
+    setcurrTasks(arr);
   }, [taskResponse.tasks, filter, sortFilter]);
   return (
     <>
