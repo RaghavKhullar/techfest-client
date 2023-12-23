@@ -113,3 +113,39 @@ export const removeSubtask = async (body: any) => {
     return e.response;
   }
 };
+
+export const editProject = async (body: any) => {
+  try {
+    const response = await CustomAxios.post("/admin/editProject", body, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const editTask = async (body: any) => {
+  try {
+    const response = await CustomAxios.post("/admin/editTask", body, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const editSubtask = async (body: any) => {
+  try {
+    const response = await CustomAxios.post("/admin/editSubtask", body, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};

@@ -35,6 +35,7 @@ interface SubTaskResponse {
   description: string;
   priority: number;
   document: string;
+  userDocument: string;
   creationTime: Date;
 }
 
