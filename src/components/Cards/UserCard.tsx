@@ -15,7 +15,7 @@ import {
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { BACKEND_URL } from "../../../config";
 import { DatePickerInput } from "@mantine/dates";
-import { position, role } from "../../utils/utils";
+import { moral, position, role } from "../../utils/utils";
 import { IconGenderFemale, IconGenderMale } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
 import { editUserByAdmin } from "../../helpers/apiCalls";
@@ -51,7 +51,7 @@ const EditUserModel = ({
       role: user.role,
       position: user.position,
       absences: user.absences || 0,
-      moral: user.moral || "",
+      moral: user.moral || "Moderate",
       currentRating: user.currentRating || 0,
     },
 
@@ -133,12 +133,15 @@ const EditUserModel = ({
               placeholder="Enter the rating"
               {...editUserForm.getInputProps("currentRating")}
             />
-            <TextInput
-              label="Moral"
-              withAsterisk
-              placeholder="Enter the Moral"
-              {...editUserForm.getInputProps("moral")}
-            />
+            <Flex className="w-full flex-col mt-[10px]">
+              <Text className="text-sm">Moral</Text>
+              <SegmentedControl
+                data={moral}
+                transitionDuration={200}
+                transitionTimingFunction="linear"
+                {...editUserForm.getInputProps("moral")}
+              />
+            </Flex>
             <Flex className="w-full flex-col mt-[10px]">
               <Text className="text-sm">Role</Text>
               <SegmentedControl
