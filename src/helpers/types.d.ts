@@ -46,3 +46,23 @@ interface SubTasksOfProjectResponse {
   taskId: string;
   subTasks: SubTaskResponse[];
 }
+
+interface UserResponseAdmin {
+  name: string;
+  id: string;
+  email: string;
+  // allotedTasks: Array<Types.ObjectId>;
+  image: string;
+  gender: string;
+  age: number;
+  isMarried: boolean;
+  role: string;
+  salary: number;
+  position: string;
+  absences: number;
+  meanMonthlyHours: number;
+  joiningDate: Date;
+  currentRating: number; // 0-10 (given by admin)
+  moral: string; // given by admin
+  stressBurnoutScore: number; // ML model
+}

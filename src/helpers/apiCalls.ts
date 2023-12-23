@@ -149,3 +149,36 @@ export const editSubtask = async (body: any) => {
     return e.response;
   }
 };
+
+export const addUser = async (body: any) => {
+  try {
+    const response = await CustomAxios.post("/admin/addUser", body, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const fetchAllUsers = async () => {
+  try {
+    const response = await CustomAxios.get("/admin/getAllUsers", {
+      withCredentials: true,
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const editUserByAdmin = async (body: any) => {
+  try {
+    const response = await CustomAxios.post("/admin/updateUser", body, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
