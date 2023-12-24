@@ -12,10 +12,12 @@ import { Outlet, useNavigate } from "react-router-dom";
 import useAuthAdmin from "../../../context/adminContext";
 import { useEffect } from "react";
 import { IconUser } from "@tabler/icons-react";
-import { SideNavAdmin } from "../../../components";
+import { SideNavUser } from "../../../components";
+import useAuthUser from "../../../context/userContext";
 const AdminAppShell = () => {
   const [opened, { toggle }] = useDisclosure(true);
-  const { user } = useAuthAdmin();
+  const { user } = useAuthUser();
+
   const navigate = useNavigate();
   useEffect(() => {
     if (!user) navigate("/login");
@@ -38,7 +40,7 @@ const AdminAppShell = () => {
       </AppShell.Header>
       {opened && user && (
         <AppShell.Navbar p="md">
-          <SideNavAdmin user={user} />
+          <SideNavUser user={user} />
         </AppShell.Navbar>
       )}
 

@@ -60,7 +60,8 @@ const EditUserModel = ({
       salary: (value) => (value > 0 ? null : "Invalid salary"),
       role: (value) => (value.length > 0 ? null : "Invalid role"),
       position: (value) => (value.length > 0 ? null : "Invalid position"),
-      absences: (value) => (value >= 0 ? null : "Invalid absences"),
+      absences: (value) =>
+        value >= 0 && value <= 30 ? null : "Invalid absences",
       currentRating: (value) =>
         value >= 0 && value <= 10
           ? null

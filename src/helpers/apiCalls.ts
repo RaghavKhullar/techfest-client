@@ -182,3 +182,14 @@ export const editUserByAdmin = async (body: any) => {
     return e.response;
   }
 };
+
+export const getUserAnalyticsDetails = async () => {
+  try {
+    const response = await CustomAxios.get("/user/getUserStats", {
+      withCredentials: true,
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};

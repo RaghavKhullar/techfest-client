@@ -1,12 +1,5 @@
 import axios from "axios";
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { BACKEND_URL } from "../../config";
 import { useLocation } from "react-router-dom";
 
@@ -52,12 +45,16 @@ export const AuthContextProviderAdmin = ({ children }: { children: any }) => {
 
   // If we change page, reset the error state.
   useEffect(() => {
-    if (error) setError(false);
-    setFetched(false);
+    if (location.pathname.includes("/admin/")) {
+      if (error) setError(false);
+      setFetched(false);
+    }
   }, [location.pathname]);
 
   useEffect(() => {
-    getLoggedIn();
+    if (location.pathname.includes("/admin/")) {
+      getLoggedIn();
+    }
   }, []);
 
   const cachedValue = useMemo(
