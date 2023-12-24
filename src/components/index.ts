@@ -10,3 +10,6 @@ export { default as UserCard } from "./Cards/UserCard";
 export { default as TableCard } from "./Analytics/TableCard";
 export { default as AbsenceCard } from "./Analytics/AbsenceCard";
 export { default as ScoreMeters } from "./Analytics/ScoreMeters";
+export { default as SubTaskCardUser } from "./UserCards/SubTaskCard";
+export { default as ProjectCardUser } from "./UserCards/ProjectCard";
+export { default as TaskCardUser } from "./UserCards/TaskCard";

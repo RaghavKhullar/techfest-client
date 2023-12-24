@@ -193,3 +193,57 @@ export const getUserAnalyticsDetails = async () => {
     return e.response;
   }
 };
+
+export const fetchAllProjectsUser = async () => {
+  try {
+    const response = await CustomAxios.get("/user/getProjects", {
+      withCredentials: true,
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const fetchTasksForProjectUser = async (projectId: string) => {
+  try {
+    const response = await CustomAxios.post(
+      "/user/getTasks",
+      { projectId: projectId },
+      { withCredentials: true }
+    );
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const fetchSubTasksForTaskUser = async (
+  projectId: string,
+  taskId: string
+) => {
+  try {
+    const response = await CustomAxios.post(
+      "/user/getSubTasks",
+      { projectId: projectId, taskId: taskId },
+      { withCredentials: true }
+    );
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const editSubtaskUser = async (body: any) => {
+  try {
+    const response = await CustomAxios.post("/user/editSubtask", body, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};

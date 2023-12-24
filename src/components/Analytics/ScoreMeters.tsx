@@ -66,7 +66,7 @@ const ScoreMeters = ({
                     value={stressBurnoutScore * 20}
                     color={getColorsFromScore(stressBurnoutScore)}
                   >
-                    <Progress.Label>Score</Progress.Label>
+                    <Progress.Label>Score: {stressBurnoutScore}</Progress.Label>
                   </Progress.Section>
                 </Tooltip>
               </Progress.Root>
