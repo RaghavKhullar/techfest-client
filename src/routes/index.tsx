@@ -1,10 +1,11 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { PageNotFound, AdminAppShell } from "../pages";
+import { PageNotFound, AdminAppShell, UserAppShell } from "../pages";
 import { MetaDecoratedPage, ProtectedRoutes } from "../components";
 import { userRoutes } from "./user.routes";
 import { adminRoutes } from "./admin.routes";
 import { unprotectedRoutes } from "./routes";
 import { AuthContextProviderAdmin } from "../context/adminContext";
+import { AuthContextProviderUser } from "../context/userContext";
 const Router = () => {
   return (
     <BrowserRouter>
@@ -33,27 +34,34 @@ const Router = () => {
           </Routes>
         </ProtectedRoutes>
       </AuthContextProviderAdmin>
-
-      <Routes>
-        {userRoutes.map((route) => {
-          return (
-            <Route
-              key={route.path}
-              path={route.path}
-              element={
-                <ProtectedRoutes type="user">
-                  <MetaDecoratedPage
-                    title={route.title}
-                    description={route.description}
-                    element={route.element}
-                  />
-                </ProtectedRoutes>
-              }
-            >
-              {route.children}
+      <AuthContextProviderUser>
+        <ProtectedRoutes type="user">
+          <Routes>
+            <Route element={<UserAppShell />}>
+              {userRoutes.map((route) => {
+                return (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    element={
+                      <ProtectedRoutes type="user">
+                        <MetaDecoratedPage
+                          title={route.title}
+                          description={route.description}
+                          element={route.element}
+                        />
+                      </ProtectedRoutes>
+                    }
+                  >
+                    {route.children}
+                  </Route>
+                );
+              })}
             </Route>
-          );
-        })}
+          </Routes>
+        </ProtectedRoutes>
+      </AuthContextProviderUser>
+      <Routes>
         {unprotectedRoutes.map((route) => {
           return (
             <Route

@@ -66,3 +66,33 @@ interface UserResponseAdmin {
   moral: string; // given by admin
   stressBurnoutScore: number; // ML model
 }
+
+interface AnalyticsSubtask {
+  name: string;
+  deadline: Date;
+  priority: string;
+  status: string;
+}
+
+interface AnalyticsData {
+  absentDays: number;
+  todoSubTask: number;
+  completeSubTask: number;
+  inProgressSubTask: number;
+  currentRating: number;
+  subTasks: AnalyticsSubtask[];
+  stressBurnoutScore: number;
+  moral: string;
+}
+interface User {
+  _id: string;
+  name: string;
+}
+
+interface AuthContextTypeUser {
+  user?: User;
+  isLoggedIn: boolean;
+  isLoading: boolean;
+  error: boolean;
+  isFetched: boolean;
+}

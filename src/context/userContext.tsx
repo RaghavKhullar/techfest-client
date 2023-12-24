@@ -1,12 +1,5 @@
 import axios from "axios";
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { BACKEND_URL } from "../../config";
 import { useLocation } from "react-router-dom";
 
@@ -14,7 +7,7 @@ const AuthContextUser = createContext<AuthContextTypeUser>(
   {} as AuthContextTypeUser
 );
 
-export const AuthContextProviderUser = ({ props }: { props: ReactNode }) => {
+export const AuthContextProviderUser = ({ children }: { children: any }) => {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -33,7 +26,7 @@ export const AuthContextProviderUser = ({ props }: { props: ReactNode }) => {
       setError(false);
       if (loggedInResponse.status === 200) {
         setLoggedIn(true);
-        setUser(loggedInResponse.data);
+        setUser(loggedInResponse.data.data);
       } else {
         setLoggedIn(false);
         setUser(undefined);
@@ -52,11 +45,16 @@ export const AuthContextProviderUser = ({ props }: { props: ReactNode }) => {
 
   // If we change page, reset the error state.
   useEffect(() => {
-    if (error) setError(false);
+    if (location.pathname.includes("/user/")) {
+      if (error) setError(false);
+      setFetched(false);
+    }
   }, [location.pathname]);
 
   useEffect(() => {
-    getLoggedIn();
+    if (location.pathname.includes("/user/")) {
+      getLoggedIn();
+    }
   }, []);
 
   const cachedValue = useMemo(
@@ -71,7 +69,7 @@ export const AuthContextProviderUser = ({ props }: { props: ReactNode }) => {
   );
   return (
     <AuthContextUser.Provider value={cachedValue}>
-      {!loading && props}
+      {!loading && children}
     </AuthContextUser.Provider>
   );
 };
