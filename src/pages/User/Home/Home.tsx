@@ -1,12 +1,30 @@
 import { Flex } from "@mantine/core";
-import { TableCard, AbsenceCard, ScoreMeters } from "../../../components";
+import {
+  TableCard,
+  AbsenceCard,
+  ScoreMeters,
+  UserCardAnalytics,
+} from "../../../components";
 import { useEffect, useState } from "react";
 import { showNotification } from "../../../helpers/helpers";
 import { useNavigate } from "react-router-dom";
 import { getUserAnalyticsDetails } from "../../../helpers/apiCalls";
-
+// import HelpDesk from "../../../components/ChatboxUi/ChatBoxUi";
 const Home = () => {
   const [data, setData] = useState<AnalyticsData>({
+    user: {
+      id: "",
+      name: "",
+      email: "",
+      image: "",
+      gender: "Male",
+      age: 0,
+      isMarried: false,
+      role: "HR",
+      salary: 0,
+      joiningDate: new Date(),
+      position: "Intern",
+    },
     absentDays: 0,
     todoSubTask: 0,
     completeSubTask: 0,
@@ -35,17 +53,23 @@ const Home = () => {
   useEffect(() => {
     getUserAnalytics();
   }, []);
-
   return (
     <>
-      <Flex className="flex-wrap justify-evenly">
-        <TableCard
-          toDo={data.todoSubTask}
-          inProgress={data.inProgressSubTask}
-          complete={data.completeSubTask}
-          subTasks={data.subTasks}
-        />
-        <Flex className="w-[45%] flex-col justify-between">
+      <Flex className="flex-col justify-between h-full">
+        <Flex className="w-full justify-evenly  mb-[3%]">
+          <UserCardAnalytics
+            user={data.user}
+            getUserAnalytics={getUserAnalytics}
+          />
+          <TableCard
+            toDo={data.todoSubTask}
+            inProgress={data.inProgressSubTask}
+            complete={data.completeSubTask}
+            subTasks={data.subTasks}
+          />
+        </Flex>
+
+        <Flex className="w-full flex-wrap justify-evenly">
           <AbsenceCard absentDays={data.absentDays} />
           <ScoreMeters
             currentRating={data.currentRating}
@@ -54,6 +78,7 @@ const Home = () => {
           />
         </Flex>
       </Flex>
+      {/* <HelpDesk delay={1} /> */}
     </>
   );
 };

@@ -26,6 +26,7 @@
     "axios": "^1.6.2",
     "chart.js": "^4.4.1",
     "dayjs": "^1.11.10",
+    "framer-motion": "^10.16.16",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
     "lodash": "^4.17.21",

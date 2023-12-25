@@ -14,7 +14,7 @@ const TableCard = ({
   complete: number;
   subTasks: AnalyticsSubtask[];
 }) => {
-  const rowsPerTable = 5;
+  const rowsPerTable = 4;
   const [rows, setRows] = useState<any>([]);
   const [activePage, setPage] = useState<number>(1);
   useEffect(() => {

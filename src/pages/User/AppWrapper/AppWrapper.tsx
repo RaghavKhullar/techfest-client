@@ -15,7 +15,7 @@ import { IconUser } from "@tabler/icons-react";
 import { SideNavUser } from "../../../components";
 import useAuthUser from "../../../context/userContext";
 const AdminAppShell = () => {
-  const [opened, { toggle }] = useDisclosure(true);
+  const [opened, { toggle }] = useDisclosure(false);
   const { user } = useAuthUser();
 
   const navigate = useNavigate();
@@ -25,23 +25,25 @@ const AdminAppShell = () => {
 
   return (
     <AppShell
-      header={{ height: 60 }}
+      header={{ height: 0.1 }}
       navbar={{
-        width: opened ? "17vw" : "0vw",
+        width: opened ? "15vw" : "4vw",
         breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
       padding="md"
     >
       <AppShell.Header>
-        <Group h="100%" px="md">
-          <Burger opened={opened} onClick={toggle} size="sm" />
-        </Group>
+        {/* <Group h="100%" px="md">
+        </Group> */}
       </AppShell.Header>
-      {opened && user && (
-        <AppShell.Navbar p="md">
-          <SideNavUser user={user} />
-        </AppShell.Navbar>
+      {user && (
+        <>
+          <AppShell.Navbar p="md">
+            <Burger opened={opened} onClick={toggle} size="sm" />
+            <SideNavUser user={user} opened={opened} />
+          </AppShell.Navbar>
+        </>
       )}
 
       <AppShell.Main>

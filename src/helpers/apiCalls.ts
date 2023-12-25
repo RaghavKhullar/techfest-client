@@ -247,3 +247,28 @@ export const editSubtaskUser = async (body: any) => {
     return e.response;
   }
 };
+
+export const fetchAllotedSubTaskUser = async () => {
+  try {
+    const response = await CustomAxios.get("/user/getAllotedSubtasks", {
+      withCredentials: true,
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const updateUserProfile = async (body: any) => {
+  try {
+    const response = await CustomAxios.post("/user/updateProfile", body, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};

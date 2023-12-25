@@ -13,13 +13,13 @@ const ScoreMeters = ({
 }) => {
   return (
     <>
-      <Flex className="w-full h-[45%] justify-between">
+      <Flex className="w-[45%] justify-between">
         <Card
           shadow="sm"
           padding="lg"
           radius="md"
           withBorder
-          className="w-[47%] h-[100%]"
+          className="w-[47%] h-full"
         >
           <Text className="text-2xl text-center">Employee rating</Text>
           <GaugeChart

@@ -75,6 +75,7 @@ interface AnalyticsSubtask {
 }
 
 interface AnalyticsData {
+  user: UserAnalytics;
   absentDays: number;
   todoSubTask: number;
   completeSubTask: number;
@@ -95,4 +96,39 @@ interface AuthContextTypeUser {
   isLoading: boolean;
   error: boolean;
   isFetched: boolean;
+}
+
+interface AllocatedSubTaskResponse {
+  name: string;
+  deadline: Date;
+  id: string;
+  status: string;
+  description: string;
+  priority: number;
+  document: string;
+  userDocument: string;
+  creationTime: Date;
+  projectId: string;
+  projectName: string;
+  taskId: string;
+  taskName: string;
+}
+
+interface AllocatedDataResponse {
+  user: UserSubTask;
+  subTasks: AllocatedSubTaskResponse[];
+}
+
+interface UserAnalytics {
+  id: string;
+  name: string;
+  email: string;
+  image: string;
+  gender: string;
+  age: number;
+  isMarried: boolean;
+  role: string;
+  salary: number;
+  joiningDate: Date;
+  position: string;
 }

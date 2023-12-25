@@ -24,7 +24,8 @@ import {
 } from "@tabler/icons-react";
 import { BACKEND_URL } from "../../../config";
 import { useForm } from "@mantine/form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useAuthUser from "../../context/userContext";
 
 const EditSubTaskModel = ({
   isEditModalOpen,
@@ -205,10 +206,17 @@ const SubTaskCard = ({
   projectName: string;
   fetchSubTasksOfProject: (projectId: string, taskId: string) => Promise<void>;
 }) => {
+  const navigate = useNavigate();
   const isMobile = useMediaQuery("max-width:600px");
   const [isModalOpen, { open, close }] = useDisclosure(false);
   const [isEditModalOpen, { open: editOpen, close: editClose }] =
     useDisclosure(false);
+  const { user } = useAuthUser();
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user]);
   return (
     <>
       <Card
@@ -218,7 +226,16 @@ const SubTaskCard = ({
       >
         <Flex justify="space-between">
           {/* No user */}
-          <Avatar />
+          <Avatar
+            src={`${BACKEND_URL}/images/profiles/${
+              subTask.allotedUsers != undefined &&
+              subTask.allotedUsers.image.length > 0
+                ? subTask.allotedUsers.image
+                : "dummyProfile.png"
+            }`}
+            size={30}
+            mr={"20px"}
+          />
           <Button onClick={open}> View</Button>
         </Flex>
 
@@ -257,7 +274,16 @@ const SubTaskCard = ({
           {subTask.allotedUsers && (
             <>
               <Flex justify="space-between" align="center">
-                <Avatar src={subTask.allotedUsers.image} />
+                <Avatar
+                  src={`${BACKEND_URL}/images/profiles/${
+                    subTask.allotedUsers != undefined &&
+                    subTask.allotedUsers.image.length > 0
+                      ? subTask.allotedUsers.image
+                      : "dummyProfile.png"
+                  }`}
+                  size={30}
+                  mr={"20px"}
+                />
                 <Text> {subTask.allotedUsers.name}</Text>
               </Flex>
             </>
@@ -305,9 +331,12 @@ const SubTaskCard = ({
             </>
           )}
         </Flex>
-        <Flex className="mt-[10px] justify-center">
-          <Button onClick={editOpen}>Edit subtask</Button>
-        </Flex>
+        {subTask.allotedUsers != undefined &&
+          subTask.allotedUsers.id === user?._id && (
+            <Flex className="mt-[10px] justify-center">
+              <Button onClick={editOpen}>Edit subtask</Button>
+            </Flex>
+          )}
       </Modal>
       <EditSubTaskModel
         isEditModalOpen={isEditModalOpen}
