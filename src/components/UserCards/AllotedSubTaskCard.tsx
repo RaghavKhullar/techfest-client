@@ -10,93 +10,61 @@ import {
   Modal,
   SegmentedControl,
   Text,
-  TextInput,
 } from "@mantine/core";
 import { useMediaQuery, useDisclosure } from "@mantine/hooks";
-import { editSubtask, removeSubtask } from "../../helpers/apiCalls";
+import { editSubtaskUser } from "../../helpers/apiCalls";
 import { showNotification } from "../../helpers/helpers";
 import { useNavigate } from "react-router-dom";
 import { getPriority } from "../../utils/utils";
 import {
-  IconArrowBigDownLinesFilled,
-  IconArrowBigUpLinesFilled,
-  IconBrandMedium,
   IconCalendarDue,
   IconDiscountCheckFilled,
   IconFileTypePdf,
   IconProgress,
+  IconLink,
 } from "@tabler/icons-react";
 import { BACKEND_URL } from "../../../config";
 import { useForm } from "@mantine/form";
-import { DatePickerInput } from "@mantine/dates";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useAuthUser from "../../context/userContext";
 
 const EditSubTaskModel = ({
   isEditModalOpen,
   editClose,
   subTask,
-  projectId,
-  taskId,
-  fetchSubTasksOfProject,
+  fetchAllotedSubTask,
 }: {
   isEditModalOpen: boolean;
   editClose: () => void;
-  subTask: SubTaskResponse;
-  projectId: string;
-  taskId: string;
-  fetchSubTasksOfProject: (projectId: string, taskId: string) => Promise<void>;
+  subTask: AllocatedSubTaskResponse;
+  fetchAllotedSubTask: () => Promise<void>;
 }) => {
   const navigate = useNavigate();
   const [isNewFile, setIsNewFile] = useState<boolean>(false);
   const addSubTaskForm = useForm<{
-    name: string;
-    description: string;
-    deadline: Date;
-    priority: string;
-    document: File | undefined;
+    userDocument: File | undefined;
     status: string;
   }>({
     initialValues: {
-      name: subTask.name,
-      description: subTask.description,
-      deadline: new Date(subTask.deadline),
-      priority: subTask.priority.toString(),
-      document:
-        subTask.document.length > 0
-          ? new File([], subTask.document)
+      userDocument:
+        subTask.userDocument.length > 0
+          ? new File([], subTask.userDocument)
           : undefined,
       status: subTask.status,
-    },
-
-    validate: {
-      name: (value) => (value.length > 0 ? null : "Invalid task name"),
-      description: (value) => (value.length > 0 ? null : "Invalid description"),
     },
   });
 
   const submitSubTaskForm = async () => {
-    if (
-      addSubTaskForm.values.description.length == 0 ||
-      addSubTaskForm.values.name.length == 0
-    ) {
-      showNotification("Error", "Invalid parameters", "error");
-      return;
-    }
-
     try {
-      const response = await editSubtask({
-        name: addSubTaskForm.values.name,
-        description: addSubTaskForm.values.description,
-        deadline: addSubTaskForm.values.deadline,
-        priority: parseInt(addSubTaskForm.values.priority),
-        file: addSubTaskForm.values.document,
+      const response = await editSubtaskUser({
+        file: addSubTaskForm.values.userDocument,
         status: addSubTaskForm.values.status,
         subtaskId: subTask.id,
         isFileUpdated: isNewFile,
       });
       if (response.status === 200) {
         showNotification("Success", response.data.message, "success");
-        fetchSubTasksOfProject(projectId as string, taskId as string);
+        fetchAllotedSubTask();
         editClose();
         return;
       } else {
@@ -127,53 +95,33 @@ const EditSubTaskModel = ({
       >
         <Box w={"80%"} mx="auto">
           <Box mx="auto">
-            <TextInput
-              withAsterisk
-              label="Add name of the sub task"
-              placeholder="John Doe"
-              {...addSubTaskForm.getInputProps("name")}
-            />
-            <TextInput
-              withAsterisk
-              label="Add description of the sub task"
-              placeholder="yours@gmail.com"
-              className="mt-[10px]"
-              {...addSubTaskForm.getInputProps("description")}
-            />
-
-            <DatePickerInput
-              valueFormat="DD-MM-YYYY"
-              className="w-full mt-[10px]"
-              label="Deadline"
-              {...addSubTaskForm.getInputProps("deadline")}
-            />
             <Flex className="mt-[10px] justify-between">
               <FileInput
                 className={
-                  addSubTaskForm.values.document != undefined
+                  addSubTaskForm.values.userDocument != undefined
                     ? "w-[70%]"
                     : "w-[100%]"
                 }
-                label="Upload the pdf file"
+                label="Upload the user pdf file"
                 leftSection={<IconFileTypePdf />}
                 accept="application/pdf"
-                {...addSubTaskForm.getInputProps("document")}
+                {...addSubTaskForm.getInputProps("userDocument")}
                 clearable
                 onChange={(e) => {
                   addSubTaskForm.setFieldValue(
-                    "document",
+                    "userDocument",
                     e != null ? e : undefined
                   );
                   if (!isNewFile) setIsNewFile(true);
                 }}
               />
-              {addSubTaskForm.values.document != undefined ? (
+              {addSubTaskForm.values.userDocument != undefined ? (
                 <Button
                   className="self-end"
                   href={
                     isNewFile
-                      ? URL.createObjectURL(addSubTaskForm.values.document)
-                      : `${BACKEND_URL}/documents/files/${subTask.document}`
+                      ? URL.createObjectURL(addSubTaskForm.values.userDocument)
+                      : `${BACKEND_URL}/documents/files/${subTask.userDocument}`
                   }
                   target="_blank"
                   component="a"
@@ -183,43 +131,6 @@ const EditSubTaskModel = ({
               ) : (
                 <></>
               )}
-            </Flex>
-            <Flex className="w-full flex-col mt-[10px]">
-              <Text className="text-sm">Priority</Text>
-              <SegmentedControl
-                data={[
-                  {
-                    value: "0",
-                    label: (
-                      <Center style={{ gap: 10 }}>
-                        <IconArrowBigDownLinesFilled />
-                        <span>Low</span>
-                      </Center>
-                    ),
-                  },
-                  {
-                    value: "1",
-                    label: (
-                      <Center style={{ gap: 10 }}>
-                        <IconBrandMedium />
-                        <span>Medium</span>
-                      </Center>
-                    ),
-                  },
-                  {
-                    value: "2",
-                    label: (
-                      <Center style={{ gap: 10 }}>
-                        <IconArrowBigUpLinesFilled />
-                        <span>High</span>
-                      </Center>
-                    ),
-                  },
-                ]}
-                transitionDuration={200}
-                transitionTimingFunction="linear"
-                {...addSubTaskForm.getInputProps("priority")}
-              />
             </Flex>
             <Flex className="w-full flex-col mt-[10px]">
               <Text className="text-sm">Status</Text>
@@ -280,52 +191,19 @@ const EditSubTaskModel = ({
 };
 
 const SubTaskCard = ({
+  user,
   subTask,
-  taskId,
-  taskName,
-  projectId,
-  projectName,
-  fetchSubTasksOfProject,
+  fetchAllotedSubTask,
 }: {
-  subTask: SubTaskResponse;
-  taskId: string;
-  taskName: string;
-  projectId: string;
-  projectName: string;
-  fetchSubTasksOfProject: (projectId: string, taskId: string) => Promise<void>;
+  user: UserSubTask;
+  subTask: AllocatedSubTaskResponse;
+  fetchAllotedSubTask: () => Promise<void>;
 }) => {
+  const navigate = useNavigate();
   const isMobile = useMediaQuery("max-width:600px");
   const [isModalOpen, { open, close }] = useDisclosure(false);
-  const [isDeleteModelOpen, { open: delOpen, close: delClose }] =
-    useDisclosure(false);
   const [isEditModalOpen, { open: editOpen, close: editClose }] =
     useDisclosure(false);
-  const navigate = useNavigate();
-  const deleteSubtask = async () => {
-    try {
-      const response = await removeSubtask({
-        taskId: taskId,
-        subTaskId: subTask.id,
-      });
-      if (response.status === 200) {
-        showNotification("Success", response.data.message, "success");
-        close();
-        delClose();
-        fetchSubTasksOfProject(projectId, taskId);
-        return;
-      } else {
-        showNotification("Error", response.data.message, "error");
-        close();
-        delClose();
-        return;
-      }
-    } catch {
-      close();
-      delClose();
-      navigate("/admin/home");
-      return;
-    }
-  };
   return (
     <>
       <Card
@@ -337,10 +215,7 @@ const SubTaskCard = ({
           {/* No user */}
           <Avatar
             src={`${BACKEND_URL}/images/profiles/${
-              subTask.allotedUsers != undefined &&
-              subTask.allotedUsers.image.length > 0
-                ? subTask.allotedUsers.image
-                : "dummyProfile.png"
+              user.image.length > 0 ? user.image : "dummyProfile.png"
             }`}
             size={30}
             mr={"20px"}
@@ -367,36 +242,55 @@ const SubTaskCard = ({
         opened={isModalOpen}
         onClose={() => {
           close();
-          if (isDeleteModelOpen) {
-            delClose();
-          }
           if (isEditModalOpen) {
             editClose();
           }
         }}
-        title={subTask.name}
         centered
         overlayProps={{
           backgroundOpacity: 0.55,
           blur: 3,
         }}
       >
+        <Center className="mb-[10px]">
+          <IconLink />{" "}
+          <Text
+            component="a"
+            href={"/user/project/" + subTask.projectId}
+            className="text-2xl"
+            ta="center"
+          >
+            Project: {subTask.projectName}
+          </Text>
+        </Center>
+        <Center className="mb-[6px]">
+          <IconLink />
+          <Text
+            component="a"
+            href={"/user/task/" + subTask.projectId + "/" + subTask.taskId}
+            className="text-lg"
+            ta="center"
+          >
+            Task: {subTask.taskName}
+          </Text>
+        </Center>
+        <Center className="mb-[6px]">
+          <Text ta="center">Subtask: {subTask.name}</Text>
+        </Center>
+
         <Group>
           <Text>Alloted to: </Text>
-          {subTask.allotedUsers && (
+          {user && (
             <>
-              <Flex justify="space-between" align="center">
+              <Flex align="center">
                 <Avatar
                   src={`${BACKEND_URL}/images/profiles/${
-                    subTask.allotedUsers != undefined &&
-                    subTask.allotedUsers.image.length > 0
-                      ? subTask.allotedUsers.image
-                      : "dummyProfile.png"
+                    user.image.length > 0 ? user.image : "dummyProfile.png"
                   }`}
                   size={30}
                   mr={"20px"}
                 />
-                <Text> {subTask.allotedUsers.name}</Text>
+                <Text> {user.name}</Text>
               </Flex>
             </>
           )}
@@ -415,7 +309,7 @@ const SubTaskCard = ({
             <Text>{getPriority(subTask.priority)}</Text>
           </Flex>
         </Flex>
-        <Flex className="mt-[10px] justify-between">
+        <Flex className="mt-[10px] justify-evenly">
           {subTask.document && subTask.document.length > 0 && (
             <>
               <Button
@@ -443,39 +337,16 @@ const SubTaskCard = ({
             </>
           )}
         </Flex>
-        <Flex className="mt-[10px] justify-between">
-          <Button onClick={delOpen}>Delete subtask</Button>
-          <Button onClick={editOpen}>Edit subtask</Button>
-        </Flex>
-      </Modal>
 
-      <Modal
-        opened={isDeleteModelOpen}
-        onClose={() => {}}
-        centered
-        overlayProps={{
-          backgroundOpacity: 0.55,
-          blur: 3,
-        }}
-        withCloseButton={false}
-      >
-        <Text className="text-3xl">Warning! {subTask.name}</Text>
-        <Text className="text-lg">
-          Are you sure you want to delete this task? It will remove all the
-          sub-task details
-        </Text>
-        <Flex className="mt-[20px] justify-evenly">
-          <Button onClick={deleteSubtask}> Yes</Button>
-          <Button onClick={delClose}> No</Button>
+        <Flex className="mt-[10px] justify-center">
+          <Button onClick={editOpen}>Edit subtask</Button>
         </Flex>
       </Modal>
       <EditSubTaskModel
         isEditModalOpen={isEditModalOpen}
         editClose={editClose}
-        fetchSubTasksOfProject={fetchSubTasksOfProject}
+        fetchAllotedSubTask={fetchAllotedSubTask}
         subTask={subTask}
-        projectId={projectId}
-        taskId={taskId}
       />
     </>
   );

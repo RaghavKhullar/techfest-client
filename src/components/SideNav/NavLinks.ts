@@ -1,3 +1,5 @@
+import { Avatar } from "@mantine/core";
+
 export const AdminNavLinks = [
   {
     name: "View Projects",
@@ -20,7 +22,7 @@ export const UserNavLinks = [
   },
   {
     name: "Assigned Goals",
-    link: "/user/myProjects",
+    link: "/user/allotedSubtasks",
   },
   {
     name: "All Projects",

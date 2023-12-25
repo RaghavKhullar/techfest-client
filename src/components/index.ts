@@ -11,5 +11,7 @@ export { default as TableCard } from "./Analytics/TableCard";
 export { default as AbsenceCard } from "./Analytics/AbsenceCard";
 export { default as ScoreMeters } from "./Analytics/ScoreMeters";
 export { default as SubTaskCardUser } from "./UserCards/SubTaskCard";
+export { default as AllotedSubTaskCardUser } from "./UserCards/AllotedSubTaskCard";
 export { default as ProjectCardUser } from "./UserCards/ProjectCard";
 export { default as TaskCardUser } from "./UserCards/TaskCard";
+export { default as UserCardAnalytics } from "./Analytics/UserCard";

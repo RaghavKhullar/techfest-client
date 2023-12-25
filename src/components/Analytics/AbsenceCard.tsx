@@ -20,7 +20,7 @@ const AbsenceCard = ({ absentDays }: { absentDays: number }) => {
         padding="lg"
         radius="md"
         withBorder
-        className="w-full h-[50%]"
+        className="w-[45%] h-[50%]"
       >
         <Text className="text-2xl text-center">Absences</Text>
         <Flex className="justify-evenly items-center h-full">

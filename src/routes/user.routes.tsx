@@ -3,6 +3,7 @@ import {
   ViewAllProjectUser,
   ViewOneProjectUser,
   ViewTaskUser,
+  ViewAllotedSubTasksUser,
 } from "../pages";
 
 export const userRoutes: RouteType[] = [
@@ -27,6 +28,12 @@ export const userRoutes: RouteType[] = [
   {
     path: "/user/task/:projectId/:taskId",
     element: <ViewTaskUser />,
+    title: "Admin Home",
+    description: "Home page of admin",
+  },
+  {
+    path: "/user/allotedSubtasks",
+    element: <ViewAllotedSubTasksUser />,
     title: "Admin Home",
     description: "Home page of admin",
   },

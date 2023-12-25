@@ -12,3 +12,4 @@ export { default as UserHome } from "./User/Home/Home";
 export { default as ViewAllProjectUser } from "./User/Viewproject/ViewAllProject";
 export { default as ViewOneProjectUser } from "./User/Viewproject/ViewOneProject";
 export { default as ViewTaskUser } from "./User/Viewproject/ViewTask";
+export { default as ViewAllotedSubTasksUser } from "./User/Viewproject/ViewAllotedSubTasks";
