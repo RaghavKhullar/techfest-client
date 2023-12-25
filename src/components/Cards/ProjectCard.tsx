@@ -306,7 +306,7 @@ const ProjectCard = ({
                       : "gray"
               }`}
             >
-              View
+              Edit
             </Button>
           </Flex>
         </Flex>
@@ -390,9 +390,6 @@ const ProjectCard = ({
           </Button>
           <Button onClick={editOpen}>
             <IconEdit />
-          </Button>
-          <Button component={Link} to={"/admin/project/" + project.id}>
-            <IconEye />
           </Button>
         </Flex>
       </Modal>
