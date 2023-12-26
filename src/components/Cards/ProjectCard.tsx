@@ -359,7 +359,7 @@ const ProjectCard = ({
             {getPriority(project.priority)}
           </Flex>
           <Flex>
-            <Text>
+            <Text size="md">
               Deadline :{getFormattedDate(new Date(project.deadline))}
             </Text>
           </Flex>

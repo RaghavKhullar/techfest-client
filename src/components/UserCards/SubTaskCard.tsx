@@ -224,7 +224,9 @@ const SubTaskCard = ({
       <Card
         shadow="xl"
         padding="md"
-        className={`${!isMobile ? "w-[25%]" : "w-full"} m-[2rem]`}
+        className={`${
+          !isMobile ? "w-[25%]" : "w-full"
+        } m-[2rem] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 m-[2rem] drop-shadow-md min-h-[15vh]`}
       >
         <Flex justify="space-between">
           {/* No user */}
@@ -238,14 +240,19 @@ const SubTaskCard = ({
             size={30}
             mr={"20px"}
           />
-          <Button onClick={open}> View</Button>
+          <Text size="md" tt="uppercase" fw={700}>
+            {subTask.name}
+          </Text>
+          <Button onClick={open} variant="filled" size="compact-sm">
+            {" "}
+            View
+          </Button>
         </Flex>
-
-        <Text>{subTask.name}</Text>
-
         <Flex>
-          <Text>Description: </Text>
-          <Text>
+          <Text fw={300} size="sm">
+            Description:{" "}
+          </Text>
+          <Text size="sm">
             {subTask.description.length > 0
               ? subTask.description
               : "No description"}
@@ -266,6 +273,9 @@ const SubTaskCard = ({
           />
           {getPriority(subTask.priority)}
         </Flex>
+        <Flex>
+          <Text>Deadline :{getFormattedDate(new Date(subTask.deadline))}</Text>
+        </Flex>
       </Card>
       <Modal
         opened={isModalOpen}
@@ -283,7 +293,9 @@ const SubTaskCard = ({
         }}
       >
         <Group>
-          <Text>Alloted to: </Text>
+          <Text fw={300} size="md">
+            Alloted to:{" "}
+          </Text>
           {subTask.allotedUsers && (
             <>
               <Flex justify="space-between" align="center">
@@ -304,8 +316,10 @@ const SubTaskCard = ({
         </Group>
         <Flex className="flex-col">
           <Flex>
-            <Text>Description: </Text>
-            <Text>
+            <Text fw={300} size="md">
+              Description:{" "}
+            </Text>
+            <Text size="md">
               {subTask.description.length > 0
                 ? subTask.description
                 : "No description"}

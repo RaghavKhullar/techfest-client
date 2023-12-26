@@ -315,6 +315,9 @@ const TaskCard = ({
           />
           {getPriority(task.priority)}
         </Flex>
+        <Flex>
+          <Text>Deadline :{getFormattedDate(new Date(task.deadline))}</Text>
+        </Flex>
       </Card>
       <Modal
         opened={isModalOpen}
