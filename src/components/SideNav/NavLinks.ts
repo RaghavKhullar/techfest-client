@@ -11,6 +11,10 @@ export const AdminNavLinks = [
     name: "Add User",
     link: "/admin/addUser",
   },
+  {
+    name: "View Calendar",
+    link: "/admin/viewCalendar",
+  },
 ];
 
 export const UserNavLinks = [

@@ -1,6 +1,7 @@
 import { Avatar, Box, Flex, Text, Skeleton, Button } from "@mantine/core";
 import { AdminNavLinks } from "./NavLinks";
 import { Link } from "react-router-dom";
+import SmallCalendar from "../../pages/Admin/ViewCalendar/SmallCalendar";
 const SideNav = ({ user }: { user: User }) => {
   return (
     <>

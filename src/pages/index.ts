@@ -8,6 +8,7 @@ export { default as ViewOneProject } from "./Admin/Viewproject/ViewOneProject";
 export { default as ViewTask } from "./Admin/Viewproject/ViewTask";
 export { default as AddUser } from "./Admin/AddUser/AddUser";
 export { default as ViewUser } from "./Admin/ViewUsers/ViewUsers";
+export { default as ViewCalendar } from "./Admin/ViewCalendar/ViewCalendar";
 export { default as UserHome } from "./User/Home/Home";
 export { default as ViewAllProjectUser } from "./User/Viewproject/ViewAllProject";
 export { default as ViewOneProjectUser } from "./User/Viewproject/ViewOneProject";
