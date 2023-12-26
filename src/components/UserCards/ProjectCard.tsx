@@ -3,7 +3,8 @@ import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { showNotification } from "../../helpers/helpers";
 import { removeProject } from "../../helpers/apiCalls";
 import { Link, useNavigate } from "react-router-dom";
-import { getPriority } from "../../utils/utils";
+import { getFormattedDate, getPriority } from "../../utils/utils";
+import { IconFlag3Filled, IconEye } from "@tabler/icons-react";
 
 const ProjectCard = ({
   project,
@@ -19,23 +20,56 @@ const ProjectCard = ({
       <Card
         shadow="xl"
         padding="md"
-        className={`${!isMobile ? "w-[25%]" : "w-full"} m-[2rem]`}
+        className={`${
+          !isMobile ? "w-[25%]" : "w-full"
+        } m-[2rem] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 drop-shadow-md m-[1rem] min-h-[15vh]`}
       >
-        <Text>{project.name}</Text>
+        <Flex className="justify-between">
+          <Text size="md" tt="uppercase" fw={700}>
+            {project.name}
+          </Text>
+          <Flex className="gap-x-2">
+            <Button
+              component={Link}
+              size="compact-sm"
+              to={"/user/project/" + project.id}
+            >
+              <IconEye />
+            </Button>
+            <Button onClick={open} variant="filled" size="compact-sm">
+              View
+            </Button>
+          </Flex>
+        </Flex>
 
         <Flex>
-          <Text>Description:</Text>
-          <Text>
+          <Text fw={300} size="sm">
+            Description:
+          </Text>
+          <Text size="sm">
             {project.description.length > 0
               ? project.description
               : "No description"}
           </Text>
         </Flex>
         <Flex>
-          <Text>Priority:</Text>
-          <Text>{getPriority(project.priority)}</Text>
+          <IconFlag3Filled
+            style={{
+              color:
+                project.priority === 0
+                  ? "green"
+                  : project.priority === 1
+                    ? "yellow"
+                    : project.priority === 2
+                      ? "red"
+                      : "gray",
+            }}
+          />
+          {getPriority(project.priority)}
         </Flex>
-        <Button onClick={open}> View</Button>
+        <Flex>
+          <Text>Deadline :{getFormattedDate(new Date(project.deadline))}</Text>
+        </Flex>
       </Card>
       <Modal
         opened={isModalOpen}
@@ -51,29 +85,49 @@ const ProjectCard = ({
       >
         <Flex className="flex-col">
           <Flex>
-            <Text>Description:</Text>
-            <Text>
+            <Text fw={300} size="md">
+              Description:
+            </Text>
+            <Text size="md">
               {project.description.length > 0
                 ? project.description
                 : "No description"}
             </Text>
           </Flex>
           <Flex>
-            <Text>Priority:</Text>
-            <Text>{getPriority(project.priority)}</Text>
+            <Text fw={300} size="md">
+              Priority:{" "}
+            </Text>
+            <IconFlag3Filled
+              style={{
+                color:
+                  project.priority === 0
+                    ? "green"
+                    : project.priority === 1
+                      ? "yellow"
+                      : project.priority === 2
+                        ? "red"
+                        : "gray",
+              }}
+            />
+            {getPriority(project.priority)}
+          </Flex>
+          <Flex>
+            <Text size="md">
+              Deadline :{getFormattedDate(new Date(project.deadline))}
+            </Text>
           </Flex>
         </Flex>
         <Group>
           <Flex direction="column">
-            <Text key={0}>Tasks:</Text>
+            <Text fw={300} key={0}>
+              Tasks:
+            </Text>
             {project.childTasks.map((task, i) => {
               return (
                 <>
-                  <Text key={i + 1}>
-                    {" "}
-                    {i + 1}
-                    {". "}
-                    {task.name}
+                  <Text className="pl-5" size="sm" key={i + 1}>
+                    {i + 1 + ". " + task.name}
                   </Text>
                 </>
               );
@@ -82,7 +136,7 @@ const ProjectCard = ({
         </Group>
         <Flex justify="center">
           <Button component={Link} to={"/user/project/" + project.id}>
-            Inspect
+            <IconEye />
           </Button>
         </Flex>
       </Modal>

@@ -15,7 +15,7 @@ import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { showNotification } from "../../helpers/helpers";
 import { editTask, removeTask } from "../../helpers/apiCalls";
 import { Link, useNavigate } from "react-router-dom";
-import { getPriority } from "../../utils/utils";
+import { getFormattedDate, getPriority } from "../../utils/utils";
 import { useForm } from "@mantine/form";
 import { DatePickerInput } from "@mantine/dates";
 import {
@@ -25,6 +25,10 @@ import {
   IconCalendarDue,
   IconDiscountCheckFilled,
   IconProgress,
+  IconTrash,
+  IconEdit,
+  IconEye,
+  IconFlag3Filled,
 } from "@tabler/icons-react";
 
 const EditTaskModel = ({
@@ -265,22 +269,55 @@ const TaskCard = ({
     <>
       <Card
         shadow="xl"
-        padding="md"
-        className={`${!isMobile ? "w-[25%]" : "w-full"} m-[2rem]`}
+        padding="xs"
+        className={`${
+          !isMobile ? "w-[25%]" : "w-full"
+        } transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 m-[2rem] drop-shadow-md min-h-[15vh]`}
       >
-        <Text>{task.name}</Text>
+        <Flex className="justify-between">
+          <Text size="md" tt="uppercase" fw={700}>
+            {task.name}
+          </Text>
+          <Flex className="gap-x-2">
+            <Button
+              size="compact-sm"
+              component={Link}
+              to={"/admin/task/" + projectId + "/" + task.id}
+            >
+              <IconEye />
+            </Button>
+            <Button onClick={open} variant="filled" size="compact-sm">
+              Edit
+            </Button>
+          </Flex>
+        </Flex>
 
         <Flex>
-          <Text>Description: </Text>
-          <Text>
+          <Text fw={300} size="sm">
+            Description:{" "}
+          </Text>
+          <Text size="sm">
             {task.description.length > 0 ? task.description : "No description"}
           </Text>
         </Flex>
         <Flex>
-          <Text>Priority: </Text>
-          <Text>{getPriority(task.priority)}</Text>
+          <IconFlag3Filled
+            style={{
+              color:
+                task.priority === 0
+                  ? "green"
+                  : task.priority === 1
+                    ? "yellow"
+                    : task.priority === 2
+                      ? "red"
+                      : "gray",
+            }}
+          />
+          {getPriority(task.priority)}
         </Flex>
-        <Button onClick={open}> View</Button>
+        <Flex>
+          <Text>Deadline :{getFormattedDate(new Date(task.deadline))}</Text>
+        </Flex>
       </Card>
       <Modal
         opened={isModalOpen}
@@ -302,27 +339,47 @@ const TaskCard = ({
       >
         <Flex className="flex-col">
           <Flex>
-            <Text>Description: </Text>
-            <Text>
+            <Text fw={300} size="md">
+              Description:{" "}
+            </Text>
+            <Text size="md">
               {task.description.length > 0
                 ? task.description
                 : "No description"}
             </Text>
           </Flex>
           <Flex>
-            <Text>Priority: </Text>
-            <Text>{getPriority(task.priority)}</Text>
+            <Text fw={300} size="md">
+              Priority:{" "}
+            </Text>
+            <IconFlag3Filled
+              style={{
+                color:
+                  task.priority === 0
+                    ? "green"
+                    : task.priority === 1
+                      ? "yellow"
+                      : task.priority === 2
+                        ? "red"
+                        : "gray",
+              }}
+            />
+            {getPriority(task.priority)}
+          </Flex>
+          <Flex>
+            <Text> Deadline :{getFormattedDate(new Date(task.deadline))}</Text>
           </Flex>
         </Flex>
         <Group>
           <Flex direction="column">
-            <Text>Subtasks</Text>
+            <Text fw={300} size="md">
+              Subtasks
+            </Text>
             {task.childTasks.map((subTask, i) => {
               return (
                 <>
-                  <Text key={i}>
-                    {i + 1}
-                    {". "} {subTask.name}
+                  <Text className="pl-5" size="sm" key={i}>
+                    {i + 1 + ". " + subTask.name}
                   </Text>
                 </>
               );
@@ -330,14 +387,18 @@ const TaskCard = ({
           </Flex>
         </Group>
         {/* Navigate to project page on click */}
-        <Flex justify="space-between">
-          <Button onClick={delOpen}>Delete task</Button>
-          <Button onClick={editOpen}>Edit task</Button>
+        <Flex className="w-1/1 gap-x-4 justify-self-center" justify="center">
+          <Button onClick={delOpen} color="red">
+            <IconTrash />
+          </Button>
+          <Button onClick={editOpen}>
+            <IconEdit />
+          </Button>
           <Button
             component={Link}
             to={"/admin/task/" + projectId + "/" + task.id}
           >
-            Inspect
+            <IconEye />
           </Button>
         </Flex>
       </Modal>
