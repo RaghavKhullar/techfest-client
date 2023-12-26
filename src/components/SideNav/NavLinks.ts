@@ -1,8 +1,6 @@
-import { Avatar } from "@mantine/core";
-
 export const AdminNavLinks = [
   {
-    name: "View Projects",
+    name: "Project Navigator",
     link: "/admin/viewProject",
   },
   {

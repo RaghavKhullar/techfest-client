@@ -15,11 +15,13 @@ import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { editSubtaskUser } from "../../helpers/apiCalls";
 import { showNotification } from "../../helpers/helpers";
 import { useNavigate } from "react-router-dom";
-import { getPriority } from "../../utils/utils";
+import { getFormattedDate, getPriority } from "../../utils/utils";
 import {
   IconCalendarDue,
   IconDiscountCheckFilled,
+  IconEdit,
   IconFileTypePdf,
+  IconFlag3Filled,
   IconProgress,
 } from "@tabler/icons-react";
 import { BACKEND_URL } from "../../../config";
@@ -108,7 +110,7 @@ const EditSubTaskModel = ({
                 label="Upload the user pdf file"
                 leftSection={<IconFileTypePdf />}
                 accept="application/pdf"
-                {...addSubTaskForm.getInputProps("document")}
+                {...addSubTaskForm.getInputProps("userDocument")}
                 clearable
                 onChange={(e) => {
                   addSubTaskForm.setFieldValue(
@@ -222,7 +224,9 @@ const SubTaskCard = ({
       <Card
         shadow="xl"
         padding="md"
-        className={`${!isMobile ? "w-[25%]" : "w-full"} m-[2rem]`}
+        className={`${
+          !isMobile ? "w-[25%]" : "w-full"
+        } m-[2rem] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 m-[2rem] drop-shadow-md min-h-[15vh]`}
       >
         <Flex justify="space-between">
           {/* No user */}
@@ -236,22 +240,41 @@ const SubTaskCard = ({
             size={30}
             mr={"20px"}
           />
-          <Button onClick={open}> View</Button>
+          <Text size="md" tt="uppercase" fw={700}>
+            {subTask.name}
+          </Text>
+          <Button onClick={open} variant="filled" size="compact-sm">
+            {" "}
+            View
+          </Button>
         </Flex>
-
-        <Text>{subTask.name}</Text>
-
         <Flex>
-          <Text>Description: </Text>
-          <Text>
+          <Text fw={300} size="sm">
+            Description:{" "}
+          </Text>
+          <Text size="sm">
             {subTask.description.length > 0
               ? subTask.description
               : "No description"}
           </Text>
         </Flex>
         <Flex>
-          <Text>Priority: </Text>
-          <Text>{getPriority(subTask.priority)}</Text>
+          <IconFlag3Filled
+            style={{
+              color:
+                subTask.priority === 0
+                  ? "green"
+                  : subTask.priority === 1
+                    ? "yellow"
+                    : subTask.priority === 2
+                      ? "red"
+                      : "gray",
+            }}
+          />
+          {getPriority(subTask.priority)}
+        </Flex>
+        <Flex>
+          <Text>Deadline :{getFormattedDate(new Date(subTask.deadline))}</Text>
         </Flex>
       </Card>
       <Modal
@@ -270,7 +293,9 @@ const SubTaskCard = ({
         }}
       >
         <Group>
-          <Text>Alloted to: </Text>
+          <Text fw={300} size="md">
+            Alloted to:{" "}
+          </Text>
           {subTask.allotedUsers && (
             <>
               <Flex justify="space-between" align="center">
@@ -291,16 +316,37 @@ const SubTaskCard = ({
         </Group>
         <Flex className="flex-col">
           <Flex>
-            <Text>Description: </Text>
-            <Text>
+            <Text fw={300} size="md">
+              Description:{" "}
+            </Text>
+            <Text size="md">
               {subTask.description.length > 0
                 ? subTask.description
                 : "No description"}
             </Text>
           </Flex>
           <Flex>
-            <Text>Priority: </Text>
-            <Text>{getPriority(subTask.priority)}</Text>
+            <Text fw={300} size="md">
+              Priority:{" "}
+            </Text>
+            <IconFlag3Filled
+              style={{
+                color:
+                  subTask.priority === 0
+                    ? "green"
+                    : subTask.priority === 1
+                      ? "yellow"
+                      : subTask.priority === 2
+                        ? "red"
+                        : "gray",
+              }}
+            />
+            {getPriority(subTask.priority)}
+          </Flex>
+          <Flex>
+            <Text>
+              Deadline :{getFormattedDate(new Date(subTask.deadline))}
+            </Text>
           </Flex>
         </Flex>
         <Flex className="mt-[10px] justify-evenly">
@@ -333,8 +379,10 @@ const SubTaskCard = ({
         </Flex>
         {subTask.allotedUsers != undefined &&
           subTask.allotedUsers.id === user?._id && (
-            <Flex className="mt-[10px] justify-center">
-              <Button onClick={editOpen}>Edit subtask</Button>
+            <Flex className="mt-[10px] justify-center gap-x-4">
+              <Button onClick={editOpen}>
+                <IconEdit />
+              </Button>
             </Flex>
           )}
       </Modal>

@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, Text, Skeleton } from "@mantine/core";
+import { Avatar, Box, Flex, Text, Skeleton, Button } from "@mantine/core";
 import { UserNavLinks } from "./NavLinks";
 import { Link } from "react-router-dom";
 const SideNav = ({ user, opened }: { user: User; opened: boolean }) => {
@@ -18,11 +18,22 @@ const SideNav = ({ user, opened }: { user: User; opened: boolean }) => {
           justify="center"
         >
           <Text className="text-3xl mb-4">Functions</Text>
-          {UserNavLinks.map((link, index) => (
-            <Text key={index} h={28} mt="sm" component={Link} to={link.link}>
-              {link.name}
-            </Text>
-          ))}
+          <Flex className="gap-y-2 h-1/1 flex-col justify-evenly">
+            {UserNavLinks.map((link, index) => (
+              <Button size="compact-md">
+                <Text
+                  fw={500}
+                  size="md"
+                  key={index}
+                  h={28}
+                  component={Link}
+                  to={link.link}
+                >
+                  {link.name}
+                </Text>
+              </Button>
+            ))}
+          </Flex>
         </Flex>
       )}
     </>
