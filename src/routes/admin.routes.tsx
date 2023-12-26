@@ -5,6 +5,7 @@ import {
   ViewTask,
   AddUser,
   ViewUser,
+  ViewCalendar,
 } from "../pages";
 
 export const adminRoutes: RouteType[] = [
@@ -41,6 +42,12 @@ export const adminRoutes: RouteType[] = [
   {
     path: "/admin/viewUsers",
     element: <ViewUser />,
+    title: "Admin Home",
+    description: "Home page of admin",
+  },
+  {
+    path: "/admin/viewCalendar",
+    element: <ViewCalendar />,
     title: "Admin Home",
     description: "Home page of admin",
   },
