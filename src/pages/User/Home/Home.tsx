@@ -9,7 +9,8 @@ import { useEffect, useState } from "react";
 import { showNotification } from "../../../helpers/helpers";
 import { useNavigate } from "react-router-dom";
 import { getUserAnalyticsDetails } from "../../../helpers/apiCalls";
-// import HelpDesk from "../../../components/ChatboxUi/ChatBoxUi";
+import { ChatBoxUi } from "../../../components";
+
 const Home = () => {
   const [data, setData] = useState<AnalyticsData>({
     user: {
@@ -50,6 +51,7 @@ const Home = () => {
       return;
     }
   };
+
   useEffect(() => {
     getUserAnalytics();
   }, []);
@@ -78,7 +80,7 @@ const Home = () => {
           />
         </Flex>
       </Flex>
-      {/* <HelpDesk delay={1} /> */}
+      <ChatBoxUi delay={1} />
     </>
   );
 };

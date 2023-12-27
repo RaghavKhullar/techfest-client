@@ -83,7 +83,6 @@ const Home = () => {
     }
     setCurrSubTasks(arr);
   }, [subtaskResponse.subTasks, filter, sortFilter]);
-  console.log(currSubTasks);
   return (
     <>
       {subtaskResponse && subtaskResponse.subTasks.length > 0 && (

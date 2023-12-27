@@ -15,3 +15,4 @@ export { default as AllotedSubTaskCardUser } from "./UserCards/AllotedSubTaskCar
 export { default as ProjectCardUser } from "./UserCards/ProjectCard";
 export { default as TaskCardUser } from "./UserCards/TaskCard";
 export { default as UserCardAnalytics } from "./Analytics/UserCard";
+export { default as ChatBoxUi } from "./ChatboxUi/ChatBoxUi";
