@@ -1,9 +1,11 @@
+import { ContextWrapper, GlobalContext } from "../context/globalContext";
 import {
   UserHome,
   ViewAllProjectUser,
   ViewOneProjectUser,
   ViewTaskUser,
   ViewAllotedSubTasksUser,
+  UserCalendar,
 } from "../pages";
 
 export const userRoutes: RouteType[] = [
@@ -36,5 +38,11 @@ export const userRoutes: RouteType[] = [
     element: <ViewAllotedSubTasksUser />,
     title: "Allotted Subtasks",
     description: "Alloted Tasks to user",
+  },
+  {
+    path: "/user/viewCalendar",
+    element: <ContextWrapper children={<UserCalendar />} />,
+    title: "Admin Home",
+    description: "Home page of admin",
   },
 ];

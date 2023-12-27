@@ -316,4 +316,14 @@ export const summariseText = async (content: string) => {
   } catch (e: any) {
     return e.response;
   }
+}
+export const getUserCalendar = async () => {
+  try {
+    const response = await CustomAxios.get("/user/getTasksCalendar", {
+      withCredentials: true,
+    });
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
 };
