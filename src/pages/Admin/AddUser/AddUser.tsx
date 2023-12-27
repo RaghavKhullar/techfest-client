@@ -72,7 +72,7 @@ const AddUser = () => {
       joiningDate: new Date(),
       salary: 0,
       role: "HR",
-      position: "Intern",
+      position: "Junior",
     },
 
     validate: {

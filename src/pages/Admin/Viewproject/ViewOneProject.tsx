@@ -13,7 +13,11 @@ import { TaskCard } from "../../../components";
 import { useParams, useNavigate } from "react-router-dom";
 import { Key, useEffect, useState } from "react";
 import { showNotification } from "../../../helpers/helpers";
-import { addTask, fetchTasksForProject } from "../../../helpers/apiCalls";
+import {
+  addTask,
+  fetchTasksForProject,
+  generateSubtasks,
+} from "../../../helpers/apiCalls";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { DatePickerInput } from "@mantine/dates";
@@ -63,6 +67,23 @@ const Home = () => {
     },
   });
 
+  const generateSubtask = async (id: string) => {
+    try {
+      const response = await generateSubtasks(id);
+      if (response.status === 200) {
+        showNotification(
+          "Success",
+          response.data.message + ". Generating subtasks....",
+          "success"
+        );
+        return;
+      } else {
+        showNotification("Error", response.data.message, "error");
+        return;
+      }
+    } catch {}
+  };
+
   const submitTaskForm = async () => {
     if (
       addTaskForm.values.description.length == 0 ||
@@ -81,8 +102,13 @@ const Home = () => {
         priority: parseInt(addTaskForm.values.priority),
       });
       if (response.status === 200) {
-        showNotification("Success", response.data.message, "success");
-        navigate("/admin/task/" + projectId + "/" + response.data.data);
+        showNotification(
+          "Success",
+          response.data.message + ". Generating subtasks....",
+          "success"
+        );
+        // navigate("/admin/task/" + projectId + "/" + response.data.data);
+        generateSubtask(response.data.data);
         return;
       } else {
         showNotification("Error", response.data.message, "error");

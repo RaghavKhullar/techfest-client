@@ -24,7 +24,7 @@ const Home = () => {
       role: "HR",
       salary: 0,
       joiningDate: new Date(),
-      position: "Intern",
+      position: "Junior",
     },
     absentDays: 0,
     todoSubTask: 0,
