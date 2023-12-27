@@ -327,3 +327,33 @@ export const getUserCalendar = async () => {
     return e.response;
   }
 };
+
+export const generateSubtasks = async (taskId: string) => {
+  try {
+    const response = await CustomAxios.post(
+      "/admin/generateSubtask",
+      { taskId: taskId },
+      {
+        withCredentials: true,
+      }
+    );
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const generateChat = async (query: string) => {
+  try {
+    const response = await CustomAxios.post(
+      "/user/generateQuery",
+      { query: query },
+      {
+        withCredentials: true,
+      }
+    );
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};

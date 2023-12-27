@@ -67,9 +67,9 @@ export const getColorsFromScore = (score: number) => {
 };
 
 export const gender = ["Male", "Female"];
-export const role = ["HR", "Backend", "Frontend"];
+export const role = ["HR", "Backend Developer", "Frontend Developer", "R&D"];
 export const moral = ["Very Low", "Low", "Moderate", "High", "Very High"];
-export const position = ["Senior", "Junior", "Intern"];
+export const position = ["Senior", "Junior"];
 
 export const getFormattedDate = (date: Date) => {
   const yyyy = date.getFullYear();
