@@ -11,12 +11,13 @@ import {
   SegmentedControl,
   Text,
   TextInput,
+  Badge,
 } from "@mantine/core";
 import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { editSubtask, removeSubtask } from "../../helpers/apiCalls";
 import { showNotification } from "../../helpers/helpers";
 import { useNavigate } from "react-router-dom";
-import { getPriority } from "../../utils/utils";
+import { getFormattedDate, getPriority } from "../../utils/utils";
 import {
   IconArrowBigDownLinesFilled,
   IconArrowBigUpLinesFilled,
@@ -27,6 +28,7 @@ import {
   IconProgress,
   IconTrash,
   IconEdit,
+  IconFlag3Filled,
 } from "@tabler/icons-react";
 import { BACKEND_URL } from "../../../config";
 import { useForm } from "@mantine/form";
@@ -335,15 +337,7 @@ const SubTaskCard = ({
         padding="xs"
         className={`${
           !isMobile ? "w-[25%]" : "w-full"
-        } transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 m-[2rem] drop-shadow-md border-2 border-solid ${
-          subTask.priority === 0
-            ? "bg-green-200 border-green-500"
-            : subTask.priority === 1
-              ? "bg-yellow-200 border-yellow-500"
-              : subTask.priority === 2
-                ? "bg-red-200 border-red-500"
-                : "bg-gray-200 border-gray-500"
-        }`}
+        } transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 m-[2rem] drop-shadow-md min-h-[15vh]`}
       >
         <Flex justify="space-between" align="center">
           {/* No user */}
@@ -360,20 +354,7 @@ const SubTaskCard = ({
           <Text size="md" tt="uppercase" fw={700}>
             {subTask.name}
           </Text>
-          <Button
-            onClick={open}
-            variant="filled"
-            size="compact-sm"
-            color={`${
-              subTask.priority === 0
-                ? "green"
-                : subTask.priority === 1
-                  ? "yellow"
-                  : subTask.priority === 2
-                    ? "red"
-                    : "gray"
-            }`}
-          >
+          <Button onClick={open} variant="filled" size="compact-sm">
             {" "}
             View
           </Button>
@@ -389,13 +370,30 @@ const SubTaskCard = ({
               : "No description"}
           </Text>
         </Flex>
+
         <Flex>
-          <Text fw={300} size="sm">
+          {/* <Text fw={300} size="sm">
             Priority:{" "}
-          </Text>
-          <Text fw={700} size="sm">
+          </Text> */}
+          <IconFlag3Filled
+            style={{
+              color:
+                subTask.priority === 0
+                  ? "green"
+                  : subTask.priority === 1
+                    ? "yellow"
+                    : subTask.priority === 2
+                      ? "red"
+                      : "gray",
+            }}
+          />
+          {getPriority(subTask.priority)}
+          {/* <Text fw={700} size="sm">
             {getPriority(subTask.priority)}
-          </Text>
+          </Text> */}
+        </Flex>
+        <Flex>
+          <Text>Deadline :{getFormattedDate(new Date(subTask.deadline))}</Text>
         </Flex>
       </Card>
       <Modal
@@ -456,8 +454,23 @@ const SubTaskCard = ({
             <Text fw={300} size="md">
               Priority:{" "}
             </Text>
-            <Text fw={700} size="md">
-              {getPriority(subTask.priority)}
+            <IconFlag3Filled
+              style={{
+                color:
+                  subTask.priority === 0
+                    ? "green"
+                    : subTask.priority === 1
+                      ? "yellow"
+                      : subTask.priority === 2
+                        ? "red"
+                        : "gray",
+              }}
+            />
+            {getPriority(subTask.priority)}
+          </Flex>
+          <Flex>
+            <Text>
+              Deadline :{getFormattedDate(new Date(subTask.deadline))}
             </Text>
           </Flex>
         </Flex>

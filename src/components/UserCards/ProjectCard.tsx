@@ -3,7 +3,8 @@ import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { showNotification } from "../../helpers/helpers";
 import { removeProject } from "../../helpers/apiCalls";
 import { Link, useNavigate } from "react-router-dom";
-import { getPriority } from "../../utils/utils";
+import { getFormattedDate, getPriority } from "../../utils/utils";
+import { IconFlag3Filled } from "@tabler/icons-react";
 
 const ProjectCard = ({
   project,
@@ -32,8 +33,22 @@ const ProjectCard = ({
           </Text>
         </Flex>
         <Flex>
-          <Text>Priority:</Text>
-          <Text>{getPriority(project.priority)}</Text>
+          <IconFlag3Filled
+            style={{
+              color:
+                project.priority === 0
+                  ? "green"
+                  : project.priority === 1
+                    ? "yellow"
+                    : project.priority === 2
+                      ? "red"
+                      : "gray",
+            }}
+          />
+          {getPriority(project.priority)}
+        </Flex>
+        <Flex>
+          <Text>Deadline :{getFormattedDate(new Date(project.deadline))}</Text>
         </Flex>
         <Button onClick={open}> View</Button>
       </Card>
@@ -59,8 +74,24 @@ const ProjectCard = ({
             </Text>
           </Flex>
           <Flex>
-            <Text>Priority:</Text>
-            <Text>{getPriority(project.priority)}</Text>
+            <IconFlag3Filled
+              style={{
+                color:
+                  project.priority === 0
+                    ? "green"
+                    : project.priority === 1
+                      ? "yellow"
+                      : project.priority === 2
+                        ? "red"
+                        : "gray",
+              }}
+            />
+            {getPriority(project.priority)}
+          </Flex>
+          <Flex>
+            <Text>
+              Deadline :{getFormattedDate(new Date(project.deadline))}
+            </Text>
           </Flex>
         </Flex>
         <Group>

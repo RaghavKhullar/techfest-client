@@ -15,7 +15,7 @@ import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { showNotification } from "../../helpers/helpers";
 import { editTask, removeTask } from "../../helpers/apiCalls";
 import { Link, useNavigate } from "react-router-dom";
-import { getPriority } from "../../utils/utils";
+import { getFormattedDate, getPriority } from "../../utils/utils";
 import { useForm } from "@mantine/form";
 import { DatePickerInput } from "@mantine/dates";
 import {
@@ -28,6 +28,7 @@ import {
   IconTrash,
   IconEdit,
   IconEye,
+  IconFlag3Filled,
 } from "@tabler/icons-react";
 
 const EditTaskModel = ({
@@ -271,15 +272,7 @@ const TaskCard = ({
         padding="xs"
         className={`${
           !isMobile ? "w-[25%]" : "w-full"
-        } transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 m-[2rem] drop-shadow-md border-2 border-solid ${
-          task.priority === 0
-            ? "bg-green-200 border-green-500"
-            : task.priority === 1
-              ? "bg-yellow-200 border-yellow-500"
-              : task.priority === 2
-                ? "bg-red-200 border-red-500"
-                : "bg-gray-200 border-gray-500"
-        }`}
+        } transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 m-[2rem] drop-shadow-md min-h-[15vh]`}
       >
         <Flex className="justify-between">
           <Text size="md" tt="uppercase" fw={700}>
@@ -290,33 +283,11 @@ const TaskCard = ({
               size="compact-sm"
               component={Link}
               to={"/admin/task/" + projectId + "/" + task.id}
-              color={`${
-                task.priority === 0
-                  ? "green"
-                  : task.priority === 1
-                    ? "yellow"
-                    : task.priority === 2
-                      ? "red"
-                      : "gray"
-              }`}
             >
               <IconEye />
             </Button>
-            <Button
-              onClick={open}
-              variant="filled"
-              size="compact-sm"
-              color={`${
-                task.priority === 0
-                  ? "green"
-                  : task.priority === 1
-                    ? "yellow"
-                    : task.priority === 2
-                      ? "red"
-                      : "gray"
-              }`}
-            >
-              View
+            <Button onClick={open} variant="filled" size="compact-sm">
+              Edit
             </Button>
           </Flex>
         </Flex>
@@ -330,12 +301,19 @@ const TaskCard = ({
           </Text>
         </Flex>
         <Flex>
-          <Text fw={300} size="sm">
-            Priority:{" "}
-          </Text>
-          <Text fw={700} size="sm">
-            {getPriority(task.priority)}
-          </Text>
+          <IconFlag3Filled
+            style={{
+              color:
+                task.priority === 0
+                  ? "green"
+                  : task.priority === 1
+                    ? "yellow"
+                    : task.priority === 2
+                      ? "red"
+                      : "gray",
+            }}
+          />
+          {getPriority(task.priority)}
         </Flex>
       </Card>
       <Modal
@@ -371,9 +349,22 @@ const TaskCard = ({
             <Text fw={300} size="md">
               Priority:{" "}
             </Text>
-            <Text fw={700} size="md">
-              {getPriority(task.priority)}
-            </Text>
+            <IconFlag3Filled
+              style={{
+                color:
+                  task.priority === 0
+                    ? "green"
+                    : task.priority === 1
+                      ? "yellow"
+                      : task.priority === 2
+                        ? "red"
+                        : "gray",
+              }}
+            />
+            {getPriority(task.priority)}
+          </Flex>
+          <Flex>
+            <Text> Deadline :{getFormattedDate(new Date(task.deadline))}</Text>
           </Flex>
         </Flex>
         <Group>

@@ -1,7 +1,8 @@
 import { Button, Card, Flex, Group, Modal, Text } from "@mantine/core";
 import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { Link } from "react-router-dom";
-import { getPriority } from "../../utils/utils";
+import { getFormattedDate, getPriority } from "../../utils/utils";
+import { IconFlag3Filled } from "@tabler/icons-react";
 
 const TaskCard = ({
   task,
@@ -30,8 +31,25 @@ const TaskCard = ({
           </Text>
         </Flex>
         <Flex>
-          <Text>Priority: </Text>
-          <Text>{getPriority(task.priority)}</Text>
+          <Text fw={300} size="md">
+            Priority:{" "}
+          </Text>
+          <IconFlag3Filled
+            style={{
+              color:
+                task.priority === 0
+                  ? "green"
+                  : task.priority === 1
+                    ? "yellow"
+                    : task.priority === 2
+                      ? "red"
+                      : "gray",
+            }}
+          />
+          {getPriority(task.priority)}
+        </Flex>
+        <Flex>
+          <Text> Deadline :{getFormattedDate(new Date(task.deadline))}</Text>
         </Flex>
         <Button onClick={open}> View</Button>
       </Card>
@@ -57,8 +75,25 @@ const TaskCard = ({
             </Text>
           </Flex>
           <Flex>
-            <Text>Priority: </Text>
-            <Text>{getPriority(task.priority)}</Text>
+            <Text fw={300} size="md">
+              Priority:{" "}
+            </Text>
+            <IconFlag3Filled
+              style={{
+                color:
+                  task.priority === 0
+                    ? "green"
+                    : task.priority === 1
+                      ? "yellow"
+                      : task.priority === 2
+                        ? "red"
+                        : "gray",
+              }}
+            />
+            {getPriority(task.priority)}
+          </Flex>
+          <Flex>
+            <Text> Deadline :{getFormattedDate(new Date(task.deadline))}</Text>
           </Flex>
         </Flex>
         <Group>

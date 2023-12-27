@@ -15,7 +15,7 @@ import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { showNotification } from "../../helpers/helpers";
 import { editProject, removeProject } from "../../helpers/apiCalls";
 import { Link, useNavigate } from "react-router-dom";
-import { getPriority } from "../../utils/utils";
+import { getFormattedDate, getPriority } from "../../utils/utils";
 import { DatePickerInput } from "@mantine/dates";
 import {
   IconArrowBigDownLinesFilled,
@@ -28,6 +28,7 @@ import {
   IconTrash,
   IconEdit,
   IconEye,
+  IconFlag3Filled,
 } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
 
@@ -261,15 +262,7 @@ const ProjectCard = ({
         padding="sm"
         className={`${
           !isMobile ? "w-[25%]" : "w-full"
-        } transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 drop-shadow-md m-[1rem] border-2 border-solid ${
-          project.priority === 0
-            ? "bg-green-200 border-green-500"
-            : project.priority === 1
-              ? "bg-yellow-200 border-yellow-500"
-              : project.priority === 2
-                ? "bg-red-200 border-red-500"
-                : "bg-gray-200 border-gray-500"
-        } `}
+        } transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 drop-shadow-md m-[1rem] min-h-[15vh]`}
       >
         <Flex className="justify-between">
           <Text size="md" tt="uppercase" fw={700}>
@@ -280,32 +273,10 @@ const ProjectCard = ({
               component={Link}
               size="compact-sm"
               to={"/admin/project/" + project.id}
-              color={`${
-                project.priority === 0
-                  ? "green"
-                  : project.priority === 1
-                    ? "yellow"
-                    : project.priority === 2
-                      ? "red"
-                      : "gray"
-              }`}
             >
               <IconEye />
             </Button>
-            <Button
-              onClick={open}
-              variant="filled"
-              size="compact-sm"
-              color={`${
-                project.priority === 0
-                  ? "green"
-                  : project.priority === 1
-                    ? "yellow"
-                    : project.priority === 2
-                      ? "red"
-                      : "gray"
-              }`}
-            >
+            <Button onClick={open} variant="filled" size="compact-sm">
               Edit
             </Button>
           </Flex>
@@ -322,12 +293,22 @@ const ProjectCard = ({
           </Text>
         </Flex>
         <Flex>
-          <Text fw={300} size="sm">
-            Priority:{" "}
-          </Text>
-          <Text fw={700} size="sm">
-            {getPriority(project.priority)}
-          </Text>
+          <IconFlag3Filled
+            style={{
+              color:
+                project.priority === 0
+                  ? "green"
+                  : project.priority === 1
+                    ? "yellow"
+                    : project.priority === 2
+                      ? "red"
+                      : "gray",
+            }}
+          />
+          {getPriority(project.priority)}
+        </Flex>
+        <Flex>
+          <Text>Deadline :{getFormattedDate(new Date(project.deadline))}</Text>
         </Flex>
       </Card>
       <Modal
@@ -363,8 +344,23 @@ const ProjectCard = ({
             <Text fw={300} size="md">
               Priority:{" "}
             </Text>
-            <Text fw={700} size="md">
-              {getPriority(project.priority)}
+            <IconFlag3Filled
+              style={{
+                color:
+                  project.priority === 0
+                    ? "green"
+                    : project.priority === 1
+                      ? "yellow"
+                      : project.priority === 2
+                        ? "red"
+                        : "gray",
+              }}
+            />
+            {getPriority(project.priority)}
+          </Flex>
+          <Flex>
+            <Text>
+              Deadline :{getFormattedDate(new Date(project.deadline))}
             </Text>
           </Flex>
         </Flex>
