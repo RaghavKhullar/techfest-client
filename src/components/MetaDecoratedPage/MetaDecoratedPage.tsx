@@ -11,7 +11,7 @@ const MetaDecoratedPage: React.FC<MetaDecoratedPageProps> = ({
     <>
       <Helmet>
         <meta name="description" content={description} />
-        <title>{title} | REConnecT'99</title>
+        <title>{title} | TaskWiz</title>
       </Helmet>
       {element}
     </>

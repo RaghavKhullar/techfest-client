@@ -272,3 +272,48 @@ export const updateUserProfile = async (body: any) => {
     return e.response;
   }
 };
+
+export const writeEmail = async (content: string) => {
+  try {
+    const response = await CustomAxios.post(
+      "/user/writeEmail",
+      { emailPoints: content },
+      {
+        withCredentials: true,
+      }
+    );
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const improveWritingUser = async (content: string) => {
+  try {
+    const response = await CustomAxios.post(
+      "/user/improveWriting",
+      { text: content },
+      {
+        withCredentials: true,
+      }
+    );
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const summariseText = async (content: string) => {
+  try {
+    const response = await CustomAxios.post(
+      "/user/summariseText",
+      { text: content },
+      {
+        withCredentials: true,
+      }
+    );
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
