@@ -316,7 +316,7 @@ export const summariseText = async (content: string) => {
   } catch (e: any) {
     return e.response;
   }
-}
+};
 export const getUserCalendar = async () => {
   try {
     const response = await CustomAxios.get("/user/getTasksCalendar", {
@@ -343,10 +343,70 @@ export const generateSubtasks = async (taskId: string) => {
   }
 };
 
+export const generateReviewUser = async (query: string) => {
+  try {
+    const response = await CustomAxios.post(
+      "/user/generateReview",
+      { id: query },
+      {
+        withCredentials: true,
+      }
+    );
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const writeEmailAdmin = async (content: string) => {
+  try {
+    const response = await CustomAxios.post(
+      "/admin/writeEmail",
+      { emailPoints: content },
+      {
+        withCredentials: true,
+      }
+    );
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const improveWritingUserAdmin = async (content: string) => {
+  try {
+    const response = await CustomAxios.post(
+      "/admin/improveWriting",
+      { text: content },
+      {
+        withCredentials: true,
+      }
+    );
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const summariseTextAdmin = async (content: string) => {
+  try {
+    const response = await CustomAxios.post(
+      "/admin/summariseText",
+      { text: content },
+      {
+        withCredentials: true,
+      }
+    );
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
 export const generateChat = async (query: string) => {
   try {
     const response = await CustomAxios.post(
-      "/user/generateQuery",
+      "/admin/generateChat",
       { query: query },
       {
         withCredentials: true,

@@ -249,9 +249,6 @@ const SubTaskCard = ({
           </Button>
         </Flex>
         <Flex>
-          <Text fw={300} size="sm">
-            Description:{" "}
-          </Text>
           <Text size="sm">
             {subTask.description.length > 0
               ? subTask.description
@@ -275,6 +272,12 @@ const SubTaskCard = ({
         </Flex>
         <Flex>
           <Text>Deadline :{getFormattedDate(new Date(subTask.deadline))}</Text>
+        </Flex>
+        <Flex>
+          <Text>
+            Predicted Completion date :
+            {getFormattedDate(new Date(subTask.predictedDeadline))}
+          </Text>
         </Flex>
       </Card>
       <Modal
@@ -316,9 +319,6 @@ const SubTaskCard = ({
         </Group>
         <Flex className="flex-col">
           <Flex>
-            <Text fw={300} size="md">
-              Description:{" "}
-            </Text>
             <Text size="md">
               {subTask.description.length > 0
                 ? subTask.description
@@ -346,6 +346,12 @@ const SubTaskCard = ({
           <Flex>
             <Text>
               Deadline :{getFormattedDate(new Date(subTask.deadline))}
+            </Text>
+          </Flex>
+          <Flex>
+            <Text>
+              Predicted Completion date :
+              {getFormattedDate(new Date(subTask.predictedDeadline))}
             </Text>
           </Flex>
         </Flex>

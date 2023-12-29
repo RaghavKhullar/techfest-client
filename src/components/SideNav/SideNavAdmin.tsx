@@ -1,7 +1,17 @@
-import { Avatar, Box, Flex, Text, Skeleton, Button } from "@mantine/core";
+import {
+  Avatar,
+  Box,
+  Flex,
+  Text,
+  Skeleton,
+  Button,
+  Tooltip,
+} from "@mantine/core";
 import { AdminNavLinks } from "./NavLinks";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { IconListDetails } from "@tabler/icons-react";
 const SideNav = ({ user }: { user: User }) => {
+  const navigate = useNavigate();
   return (
     <>
       <Flex align="center">
@@ -18,6 +28,9 @@ const SideNav = ({ user }: { user: User }) => {
       >
         <Text className="text-3xl mb-4">Functions</Text>
         <Flex className="gap-y-2 h-1/1 flex-col justify-evenly">
+          <Tooltip label="View all Projects">
+            <IconListDetails onClick={() => navigate("/admin/viewProject")} />
+          </Tooltip>
           {AdminNavLinks.map((link, index) => (
             <Button size="compact-md">
               <Text

@@ -37,6 +37,7 @@ interface SubTaskResponse {
   document: string;
   userDocument: string;
   creationTime: Date;
+  predictedDeadline: Date;
 }
 
 interface SubTasksOfProjectResponse {
@@ -112,6 +113,7 @@ interface AllocatedSubTaskResponse {
   projectName: string;
   taskId: string;
   taskName: string;
+  predictedDeadline: Date;
 }
 
 interface AllocatedDataResponse {

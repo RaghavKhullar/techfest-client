@@ -9,7 +9,7 @@ import {
   Text,
   SegmentedControl,
 } from "@mantine/core";
-import { ProjectCard } from "../../../components";
+import { ChatBoxUiAdmin, ProjectCard } from "../../../components";
 import { useEffect, useState } from "react";
 import { addProject, fetchAllProjects } from "../../../helpers/apiCalls";
 import { showNotification } from "../../../helpers/helpers";
@@ -326,6 +326,7 @@ const Home = () => {
             );
           })}
       </Flex>
+      <ChatBoxUiAdmin delay={1} />
     </>
   );
 };

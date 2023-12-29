@@ -18,9 +18,10 @@ import { DatePickerInput } from "@mantine/dates";
 import { moral, position, role } from "../../utils/utils";
 import { IconGenderFemale, IconGenderMale } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
-import { editUserByAdmin } from "../../helpers/apiCalls";
+import { editUserByAdmin, generateReviewUser } from "../../helpers/apiCalls";
 import { showNotification } from "../../helpers/helpers";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const EditUserModel = ({
   user,
@@ -227,8 +228,11 @@ const UserViewModal = ({
   close: () => void;
   fetchUsers: () => Promise<void>;
 }) => {
+  const navigate = useNavigate();
   const [isEditModalOpen, { open: editOpen, close: editClose }] =
     useDisclosure(false);
+  const [textReview, setTextReview] = useState<string>("");
+  const [fetching, setFetching] = useState<boolean>(false);
   const getFormattedDate = (date: Date) => {
     const yyyy = date.getFullYear();
     let mm: any = date.getMonth() + 1; // Months start at 0!
@@ -239,6 +243,32 @@ const UserViewModal = ({
 
     return dd + "/" + mm + "/" + yyyy;
   };
+  const [isOpen, { open: openModal, close: closeModal }] = useDisclosure(false);
+  const generateReview = async () => {
+    try {
+      setFetching(true);
+      const response = await generateReviewUser(user.id);
+      if (response.status === 200) {
+        // showNotification("Success", response.data.message, "success");
+        setFetching(false);
+        setTextReview(response.data);
+        return;
+      } else {
+        showNotification("Error", response.data.message, "error");
+        return;
+      }
+    } catch {
+      showNotification("Error", "Internal server error", "error");
+      navigate("/login");
+      return;
+    }
+  };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      generateReview();
+    }
+  }, [isModalOpen]);
   return (
     <>
       <Modal
@@ -247,6 +277,9 @@ const UserViewModal = ({
           close();
           if (isEditModalOpen) {
             editClose();
+          }
+          if (isOpen) {
+            closeModal();
           }
         }}
         centered
@@ -284,7 +317,17 @@ const UserViewModal = ({
           Moral: {user.moral.length > 0 ? user.moral : "Not specified"}
         </Text>
         <Text size="md">Stress score: {user.stressBurnoutScore}</Text>
-        <Button onClick={editOpen}>Edit profile</Button>
+        <Flex className="justify-evenly">
+          <Button onClick={editOpen}>Edit profile</Button>
+          <Button onClick={openModal}>Generate Review</Button>
+        </Flex>
+      </Modal>
+      <Modal
+        opened={isOpen && isModalOpen && !fetching && textReview.length > 0}
+        onClose={closeModal}
+      >
+        <Text className="size-lg">Review: {user.name}</Text>
+        <Text>{textReview}</Text>
       </Modal>
       <EditUserModel
         isEditModalOpen={isEditModalOpen}
