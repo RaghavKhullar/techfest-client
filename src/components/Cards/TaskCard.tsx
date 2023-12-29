@@ -293,9 +293,6 @@ const TaskCard = ({
         </Flex>
 
         <Flex>
-          <Text fw={300} size="sm">
-            Description:{" "}
-          </Text>
           <Text size="sm">
             {task.description.length > 0 ? task.description : "No description"}
           </Text>
@@ -339,9 +336,6 @@ const TaskCard = ({
       >
         <Flex className="flex-col">
           <Flex>
-            <Text fw={300} size="md">
-              Description:{" "}
-            </Text>
             <Text size="md">
               {task.description.length > 0
                 ? task.description

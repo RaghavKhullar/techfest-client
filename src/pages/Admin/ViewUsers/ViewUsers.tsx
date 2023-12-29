@@ -1,4 +1,4 @@
-import { Flex } from "@mantine/core";
+import { Flex, Center, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { fetchAllUsers } from "../../../helpers/apiCalls";
 import { showNotification } from "../../../helpers/helpers";
@@ -30,10 +30,15 @@ const ViewUser = () => {
   return (
     <>
       <Flex wrap="wrap" justify="space-around">
-        {users.length > 0 &&
+        {users.length > 0 ? (
           users.map((project: UserResponseAdmin, i) => {
             return <UserCard key={i} user={project} fetchUsers={fetchUsers} />;
-          })}
+          })
+        ) : (
+          <Center>
+            <Text className="text-2xl">Fetching all users...</Text>
+          </Center>
+        )}
       </Flex>
     </>
   );

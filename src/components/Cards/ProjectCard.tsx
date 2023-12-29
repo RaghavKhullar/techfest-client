@@ -283,9 +283,6 @@ const ProjectCard = ({
         </Flex>
 
         <Flex>
-          <Text fw={300} size="sm">
-            Description:{" "}
-          </Text>
           <Text size="sm">
             {project.description.length > 0
               ? project.description
@@ -331,9 +328,6 @@ const ProjectCard = ({
       >
         <Flex className="flex-col">
           <Flex>
-            <Text fw={300} size="md">
-              Description:{" "}
-            </Text>
             <Text size="md">
               {project.description.length > 0
                 ? project.description

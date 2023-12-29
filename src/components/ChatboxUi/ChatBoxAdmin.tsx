@@ -22,8 +22,11 @@ import { useNavigate } from "react-router-dom";
 import {
   generateChat,
   improveWritingUser,
+  improveWritingUserAdmin,
   summariseText,
+  summariseTextAdmin,
   writeEmail,
+  writeEmailAdmin,
 } from "../../helpers/apiCalls";
 import { showNotification } from "../../helpers/helpers";
 
@@ -38,11 +41,13 @@ const HelpDesk: FC<Props> = ({ delay }) => {
   const [text, setText] = useState<any>("");
   const [emailPoints, setEmailPoints] = useState<string>("");
   const [improveWriting, setImproveWriting] = useState<string>("");
+  const [chat, setChat] = useState<string>("");
 
   const [isFetchingEmail, setFetchingEmail] = useState<boolean>(false);
   const [isFetchingText, setFetchingText] = useState<boolean>(false);
   const [isFetchingImproveWriting, setIsFetchingImproveWriting] =
     useState<boolean>(false);
+  const [isFetchingChat, setIsFetchingChat] = useState<boolean>(false);
 
   const [isGeneratedEmail, setIsGeneratedEmail] = useState<boolean>(false);
   const [isGeneratedSummary, setIsGeneratedSummary] = useState<boolean>(false);
@@ -52,12 +57,41 @@ const HelpDesk: FC<Props> = ({ delay }) => {
   const [generatedEmail, setGeneratedEmail] = useState<string>("");
   const [generatedSummary, setGeneratedSummary] = useState<string>("");
   const [generatedImproveText, setGeneratedImproveText] = useState<string>("");
+  const [generatedChat, setGeneratedChat] = useState<
+    { query: string; output: string }[]
+  >([]);
+
+  const generateChatSubmit = async (content: string) => {
+    setIsFetchingChat(true);
+    try {
+      const arr = generatedChat;
+      arr.push({ query: content, output: "" });
+      setGeneratedChat(arr);
+      const response = await generateChat(content);
+      if (response.status === 200) {
+        const newArr = generatedChat;
+        newArr.pop();
+        newArr.push({ query: content, output: response.data });
+        setGeneratedChat(newArr);
+      } else {
+        const newArr = generatedChat;
+        newArr.pop();
+        setGeneratedChat(newArr);
+        showNotification("Error", response.data.message, "error");
+      }
+    } catch {
+      showNotification("Error", "Internal server error", "error");
+      navigate("/login");
+    }
+    setChat("");
+    setIsFetchingChat(false);
+  };
 
   const genenerateEmail = async (content: string) => {
     setFetchingEmail(true);
     setIsGeneratedEmail(true);
     try {
-      const response = await writeEmail(content);
+      const response = await writeEmailAdmin(content);
       if (response.status === 200) {
         setGeneratedEmail(response.data);
         showNotification("Success", "Generated email successfully", "success");
@@ -77,7 +111,7 @@ const HelpDesk: FC<Props> = ({ delay }) => {
     setIsFetchingImproveWriting(true);
     setIsGeneratedImproveText(true);
     try {
-      const response = await improveWritingUser(content);
+      const response = await improveWritingUserAdmin(content);
       if (response.status === 200) {
         setGeneratedImproveText(response.data);
         showNotification("Success", "Imrpoved writing successfully", "success");
@@ -97,7 +131,7 @@ const HelpDesk: FC<Props> = ({ delay }) => {
     setFetchingText(true);
     setIsGeneratedSummary(true);
     try {
-      const response = await summariseText(content);
+      const response = await summariseTextAdmin(content);
       if (response.status === 200) {
         setGeneratedSummary(response.data);
         showNotification("Success", "Summarised successfully", "success");
@@ -206,6 +240,7 @@ const HelpDesk: FC<Props> = ({ delay }) => {
                         { label: "Improve writing", value: "1" },
                         { label: "Write an email", value: "2" },
                         { label: "Summarize", value: "3" },
+                        { label: "Chat bot", value: "4" },
                       ]}
                     />
                     {value != "4" && (
@@ -327,6 +362,50 @@ const HelpDesk: FC<Props> = ({ delay }) => {
                         onChange={(event) => setText(event.currentTarget.value)}
                       />
                     ))}
+                  {value == "4" && (
+                    <>
+                      <Flex className="h-[20vh] max-h-[20vh] border-[3px] border-solid rounded-md overflow-y-auto w-full flex-col">
+                        {generatedChat.map((elem, key) => {
+                          return (
+                            <>
+                              <Flex
+                                className="max-w-[70%] rounded-lg bg-blue-500 text-white self-end mt-[10px] mr-[4px] p-[4px]"
+                                key={key}
+                              >
+                                <Text>{elem.query}</Text>
+                              </Flex>
+                              <Flex
+                                className="max-w-[70%] rounded-lg bg-green-500 text-white self-start mt-[10px] ml-[4px] p-[4px]"
+                                key={generatedChat.length + key}
+                              >
+                                <Text>
+                                  {elem.output.length > 0
+                                    ? elem.output
+                                    : "Generating ..."}
+                                </Text>
+                              </Flex>
+                            </>
+                          );
+                        })}
+                      </Flex>
+                      <Skeleton visible={isFetchingChat}>
+                        <Textarea
+                          classNames={{
+                            input:
+                              "h-[8vh] border-[3px] border-solid rounded-md",
+                          }}
+                          label="Query"
+                          placeholder="Type/Paste your query"
+                          withAsterisk
+                          value={chat}
+                          disabled={isFetchingChat}
+                          onChange={(event) =>
+                            setChat(event.currentTarget.value)
+                          }
+                        />
+                      </Skeleton>
+                    </>
+                  )}
                 </div>
                 <Group
                   style={{
@@ -436,6 +515,21 @@ const HelpDesk: FC<Props> = ({ delay }) => {
                         w={"100%"}
                         disabled={isFetchingText}
                         onClick={() => generateSummariseText(text)}
+                      >
+                        {" "}
+                        Generate
+                      </Button>
+                    ))}
+                  {value == "4" &&
+                    (isFetchingChat ? (
+                      <Button rightSection={<Loader color="white" size={14} />}>
+                        Generating
+                      </Button>
+                    ) : (
+                      <Button
+                        w={"100%"}
+                        disabled={isFetchingChat}
+                        onClick={() => generateChatSubmit(chat)}
                       >
                         {" "}
                         Generate
