@@ -25,16 +25,16 @@ const AdminAppShell = () => {
     <AppShell
       header={{ height: 60 }}
       navbar={{
-        width: opened ? "17vw" : "0vw",
+        width: opened ? "4vw" : "0vw",
         breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
       padding="md"
     >
       <AppShell.Header>
-        <Group h="100%" px="md">
+        {/* <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} size="sm" />
-        </Group>
+        </Group> */}
       </AppShell.Header>
       {opened && user && (
         <AppShell.Navbar p="md">

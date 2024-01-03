@@ -246,7 +246,7 @@ const UserCard = ({
                 </Text>
               </Flex>
               <Flex className="flex-col flex-wrap w-full max-w-[45%] justify-between">
-                <Text className="text-md truncate">Salary: {user.salary}</Text>
+                <Text className="text-md truncate">Salary: {user.salary}k</Text>
                 <Text className="text-md truncate">Age: {user.age}</Text>
                 <Text className="text-md truncate">
                   Marrital: {user.isMarried ? "Married" : "Unmarried"}

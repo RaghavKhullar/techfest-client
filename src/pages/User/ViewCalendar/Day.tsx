@@ -25,7 +25,6 @@ export default function Day({ day, rowIdx, task = null }: any) {
       : "";
   }
   function getTaskClass() {
-    if (task) console.log(task["projectId"], task["taskId"]);
     return task ? "bg-red-600 text-white rounded-full w-7" : "";
   }
   function handleTask() {

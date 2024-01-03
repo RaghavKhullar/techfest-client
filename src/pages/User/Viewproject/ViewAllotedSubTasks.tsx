@@ -6,7 +6,7 @@ import {
   Text,
   SegmentedControl,
 } from "@mantine/core";
-import { AllotedSubTaskCardUser } from "../../../components";
+import { AllotedSubTaskCardUser, ChatBoxUi } from "../../../components";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { showNotification } from "../../../helpers/helpers";
@@ -42,7 +42,7 @@ const Home = () => {
         setSubtaskResponse(response.data.data);
       } else {
         showNotification("Error", response.data.message, "error");
-        navigate("/user/home");
+        navigate("/user/analytics");
         return;
       }
     } catch {
@@ -204,6 +204,7 @@ const Home = () => {
             );
           })}
       </Flex>
+      <ChatBoxUi delay={1} />
     </>
   );
 };

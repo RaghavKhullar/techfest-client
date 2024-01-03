@@ -307,7 +307,7 @@ const UserViewModal = ({
         <Text size="md">
           Marital Status: {user.isMarried ? "Married" : "Unmarried"}
         </Text>
-        <Text size="md">Salary: {user.salary}</Text>
+        <Text size="md">Salary: {user.salary}k</Text>
         <Text size="md">Absence: {user.absences}</Text>
         <Text size="md">
           Joining Date: {getFormattedDate(new Date(user.joiningDate))}

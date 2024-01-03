@@ -15,7 +15,7 @@ import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { editSubtaskUser } from "../../helpers/apiCalls";
 import { showNotification } from "../../helpers/helpers";
 import { useNavigate } from "react-router-dom";
-import { getFormattedDate, getPriority } from "../../utils/utils";
+import { getFormattedDate, getPriority, getStatus } from "../../utils/utils";
 import {
   IconCalendarDue,
   IconDiscountCheckFilled,
@@ -28,6 +28,7 @@ import { BACKEND_URL } from "../../../config";
 import { useForm } from "@mantine/form";
 import { useEffect, useState } from "react";
 import useAuthUser from "../../context/userContext";
+import { FinalUserCard } from "..";
 
 const EditSubTaskModel = ({
   isEditModalOpen,
@@ -219,6 +220,8 @@ const SubTaskCard = ({
       navigate("/login");
     }
   }, [user]);
+  const [isOpen, { open: isOpenOpen, close: isOpenClose }] =
+    useDisclosure(false);
   return (
     <>
       <Card
@@ -239,6 +242,8 @@ const SubTaskCard = ({
             }`}
             size={30}
             mr={"20px"}
+            className="cursor-pointer"
+            onClick={isOpenOpen}
           />
           <Text size="md" tt="uppercase" fw={700}>
             {subTask.name}
@@ -278,6 +283,9 @@ const SubTaskCard = ({
             Predicted Completion date :
             {getFormattedDate(new Date(subTask.predictedDeadline))}
           </Text>
+        </Flex>
+        <Flex>
+          <Text>Status:{getStatus(subTask.status)}</Text>
         </Flex>
       </Card>
       <Modal
@@ -354,6 +362,9 @@ const SubTaskCard = ({
               {getFormattedDate(new Date(subTask.predictedDeadline))}
             </Text>
           </Flex>
+          <Flex>
+            <Text>Status:{getStatus(subTask.status)}</Text>
+          </Flex>
         </Flex>
         <Flex className="mt-[10px] justify-evenly">
           {subTask.document && subTask.document.length > 0 && (
@@ -400,6 +411,13 @@ const SubTaskCard = ({
         projectId={projectId}
         taskId={taskId}
       />
+      {isOpen && (
+        <FinalUserCard
+          id={subTask.allotedUsers.id}
+          isModalOpen={isOpen}
+          close={isOpenClose}
+        />
+      )}
     </>
   );
 };

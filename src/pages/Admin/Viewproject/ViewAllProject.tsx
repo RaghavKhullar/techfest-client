@@ -94,7 +94,7 @@ const Home = () => {
         setProjects(response.data.data);
       } else {
         showNotification("Error", response.data.message, "error");
-        navigate("/admin/home");
+        navigate("/login");
         return;
       }
     } catch {

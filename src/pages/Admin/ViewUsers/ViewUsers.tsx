@@ -15,7 +15,7 @@ const ViewUser = () => {
         setUsers(response.data.data);
       } else {
         showNotification("Error", response.data.message, "error");
-        navigate("/admin/home");
+        navigate("/admin/viewProject");
         return;
       }
     } catch {

@@ -18,7 +18,6 @@ export default function Month({ month, deadlines }: any) {
           return newState;
         });
       });
-      console.log(deadlines[year][monthIndex]);
     }
   }, [deadlines, year, month]);
   return (
