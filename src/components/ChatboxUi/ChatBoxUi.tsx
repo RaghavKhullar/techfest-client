@@ -150,7 +150,7 @@ const HelpDesk: FC<Props> = ({ delay }) => {
               }}
               onClick={open}
             >
-              Open
+              Open Chatbox
             </Button>
           </motion.div>
         )}

@@ -17,3 +17,4 @@ export { default as TaskCardUser } from "./UserCards/TaskCard";
 export { default as UserCardAnalytics } from "./Analytics/UserCard";
 export { default as ChatBoxUi } from "./ChatboxUi/ChatBoxUi";
 export { default as ChatBoxUiAdmin } from "./ChatboxUi/ChatBoxAdmin";
+export { default as FinalUserCard } from "./Cards/Card";

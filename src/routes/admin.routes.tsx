@@ -8,12 +8,12 @@ import {
 } from "../pages";
 
 export const adminRoutes: RouteType[] = [
-  {
-    path: "/admin/home",
-    element: <AdminHome />,
-    title: "Admin Home",
-    description: "Home page of admin",
-  },
+  // {
+  //   path: "/admin/home",
+  //   element: <AdminHome />,
+  //   title: "Admin Home",
+  //   description: "Home page of admin",
+  // },
   {
     path: "/admin/viewProject",
     element: <ViewAllProject />,

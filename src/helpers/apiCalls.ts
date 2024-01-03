@@ -345,13 +345,9 @@ export const generateSubtasks = async (taskId: string) => {
 
 export const generateReviewUser = async (query: string) => {
   try {
-    const response = await CustomAxios.post(
-      "/user/generateReview",
-      { id: query },
-      {
-        withCredentials: true,
-      }
-    );
+    const response = await CustomAxios.post("/user/generateReview", {
+      id: query,
+    });
     return response;
   } catch (e: any) {
     return e.response;
@@ -412,6 +408,17 @@ export const generateChat = async (query: string) => {
         withCredentials: true,
       }
     );
+    return response;
+  } catch (e: any) {
+    return e.response;
+  }
+};
+
+export const getUserFullDetails = async (query: string) => {
+  try {
+    const response = await CustomAxios.post("/user/getDetailsFinal", {
+      userId: query,
+    });
     return response;
   } catch (e: any) {
     return e.response;

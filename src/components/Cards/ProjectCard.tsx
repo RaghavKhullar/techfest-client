@@ -251,7 +251,7 @@ const ProjectCard = ({
     } catch {
       close();
       delClose();
-      navigate("/admin/home");
+      navigate("/login");
       return;
     }
   };

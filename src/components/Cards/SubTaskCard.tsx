@@ -17,7 +17,7 @@ import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { editSubtask, removeSubtask } from "../../helpers/apiCalls";
 import { showNotification } from "../../helpers/helpers";
 import { useNavigate } from "react-router-dom";
-import { getFormattedDate, getPriority } from "../../utils/utils";
+import { getFormattedDate, getPriority, getStatus } from "../../utils/utils";
 import {
   IconArrowBigDownLinesFilled,
   IconArrowBigUpLinesFilled,
@@ -34,6 +34,7 @@ import { BACKEND_URL } from "../../../config";
 import { useForm } from "@mantine/form";
 import { DatePickerInput } from "@mantine/dates";
 import { useState } from "react";
+import { FinalUserCard } from "../index";
 
 const EditSubTaskModel = ({
   isEditModalOpen,
@@ -304,6 +305,9 @@ const SubTaskCard = ({
     useDisclosure(false);
   const [isEditModalOpen, { open: editOpen, close: editClose }] =
     useDisclosure(false);
+  const [isOpen, { open: isOpenOpen, close: isOpenClose }] =
+    useDisclosure(false);
+
   const navigate = useNavigate();
   const deleteSubtask = async () => {
     try {
@@ -326,7 +330,7 @@ const SubTaskCard = ({
     } catch {
       close();
       delClose();
-      navigate("/admin/home");
+      navigate("/login");
       return;
     }
   };
@@ -350,6 +354,8 @@ const SubTaskCard = ({
             }`}
             size={30}
             mr={"20px"}
+            className="cursor-pointer"
+            onClick={isOpenOpen}
           />
           <Text size="md" tt="uppercase" fw={700}>
             {subTask.name}
@@ -397,6 +403,9 @@ const SubTaskCard = ({
             Predicted Completion date :
             {getFormattedDate(new Date(subTask.predictedDeadline))}
           </Text>
+        </Flex>
+        <Flex>
+          <Text>Status:{getStatus(subTask.status)}</Text>
         </Flex>
       </Card>
       <Modal
@@ -479,6 +488,9 @@ const SubTaskCard = ({
               {getFormattedDate(new Date(subTask.predictedDeadline))}
             </Text>
           </Flex>
+          <Flex>
+            <Text>Status:{getStatus(subTask.status)}</Text>
+          </Flex>
         </Flex>
         <Flex className="mt-[10px] justify-between">
           {subTask.document && subTask.document.length > 0 && (
@@ -546,6 +558,13 @@ const SubTaskCard = ({
         projectId={projectId}
         taskId={taskId}
       />
+      {isOpen && (
+        <FinalUserCard
+          id={subTask.allotedUsers.id}
+          isModalOpen={isOpen}
+          close={isOpenClose}
+        />
+      )}
     </>
   );
 };

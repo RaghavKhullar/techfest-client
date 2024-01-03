@@ -10,7 +10,7 @@ import {
 
 export const userRoutes: RouteType[] = [
   {
-    path: "/user/home",
+    path: "/user/analytics",
     element: <UserHome />,
     title: "User Home",
     description: "Home page of user",

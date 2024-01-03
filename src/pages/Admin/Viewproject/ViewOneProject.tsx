@@ -108,7 +108,11 @@ const Home = () => {
           "success"
         );
         // navigate("/admin/task/" + projectId + "/" + response.data.data);
+        // close()
         generateSubtask(response.data.data);
+
+        fetchTasksOfProject(projectId as string);
+
         return;
       } else {
         showNotification("Error", response.data.message, "error");
